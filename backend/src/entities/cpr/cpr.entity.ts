@@ -6,6 +6,31 @@ import { GuarantorEntity } from '../person/guarantor.entity';
 import { ProductEntity } from '../product.entity';
 import { FarmEntity } from '../person/farm.entity';
 
+export class PaymentEntity extends TenantEntity {
+  dueDate: Date;
+  value: number;
+
+  get dueDateFormatted() {
+    return FormatterUtil.formatDateBR(this.dueDate);
+  }
+
+  get valueFormatted() {
+    return FormatterUtil.toBRL(this.value);
+  }
+
+  private constructor() {
+    super();
+  }
+
+  get qualification(): string {
+    return `${this.valueFormatted} com vencimento em ${this.dueDateFormatted}`;
+  }
+
+  static create(dueDate: Date, value: number): PaymentEntity {
+    return Object.assign(new PaymentEntity(), { dueDate, value });
+  }
+}
+
 export class CprEntity extends TenantEntity {
   number: string;
   creditor: CreditorEntity;
@@ -15,6 +40,7 @@ export class CprEntity extends TenantEntity {
   crop: string;
   quantity: number;
   productDevelopmentSite: FarmEntity;
+  paymentSchedule: PaymentEntity[];
 
   get sacas(): number {
     return this.quantity / 60;
@@ -61,7 +87,11 @@ export class CprEntity extends TenantEntity {
       crop,
       quantity,
       productDevelopmentSite,
+      paymentSchedule,
     } = obj;
+
+    // console.log(paymentSchedule[0].qualification);
+
     return Object.assign(new CprEntity(), {
       creditor,
       emitter,
@@ -70,6 +100,7 @@ export class CprEntity extends TenantEntity {
       crop,
       quantity,
       productDevelopmentSite,
+      paymentSchedule,
     });
   }
 }

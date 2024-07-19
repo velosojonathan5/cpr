@@ -12,8 +12,6 @@ export class BaseService<T extends BaseEntity> {
   async getById(id: string): Promise<T> {
     const item = await this.repository.getById(id);
 
-    // console.log({ item });
-
     if (!item) {
       throw new NotFoundException(id);
     }

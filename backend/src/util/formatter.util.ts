@@ -35,4 +35,11 @@ export class FormatterUtil {
       minimumFractionDigits,
     });
   }
+
+  static toBRL(value: number) {
+    return value.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+  }
 }

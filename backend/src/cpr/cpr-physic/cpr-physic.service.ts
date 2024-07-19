@@ -12,6 +12,7 @@ import { AddressEntity } from '../../entities/person/address.entity';
 import { ProductEntity } from '../../entities/product.entity';
 import * as PDFDocument from 'pdfkit';
 import { createWriteStream } from 'fs';
+import { PaymentEntity } from '../../entities/cpr/cpr.entity';
 
 @Injectable()
 export class CprPhysicService extends CprService<CprPhysicEntity> {
@@ -41,7 +42,7 @@ export class CprPhysicService extends CprService<CprPhysicEntity> {
         createCprPhysicDto.productDevelopmentSite.cultivatedArea;
     }
 
-    const { product, crop, quantity } = createCprPhysicDto;
+    const { product, crop, quantity, paymentSchedule } = createCprPhysicDto;
     const cpr = CprPhysicEntity.create({
       creditor,
       emitter,
@@ -50,10 +51,13 @@ export class CprPhysicService extends CprService<CprPhysicEntity> {
       crop,
       quantity,
       productDevelopmentSite,
+      paymentSchedule: paymentSchedule.map((p) =>
+        PaymentEntity.create(p.dueDate, p.value),
+      ),
     });
 
     // arquitetura orientada a eventos?
-    this.generateDocument(cpr);
+    // this.generateDocument(cpr);
 
     super.save(cpr);
 

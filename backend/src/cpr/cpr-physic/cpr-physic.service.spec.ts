@@ -83,10 +83,14 @@ const mockCprDto: CreateCprPhysicDto = {
   paymentSchedule: [
     {
       dueDate: new Date('2024-07-11T19:07:32.565Z'),
-      value: 10,
+      value: 5000,
+    },
+    {
+      dueDate: new Date('2024-08-11T19:07:32.565Z'),
+      value: 5000,
     },
   ],
-  value: 10,
+  value: 10000,
   currencyCode: 'BRL',
 };
 
@@ -338,6 +342,13 @@ describe('CprPhysicService', () => {
       );
       expect(createdCPR.productDevelopmentSite.qualifications[7].content).toBe(
         'MAT11333',
+      );
+
+      expect(createdCPR.paymentSchedule[0].qualification).toBe(
+        `R$${String.fromCharCode(160)}5.000,00 com vencimento em 11/07/2024`,
+      );
+      expect(createdCPR.paymentSchedule[1].qualification).toBe(
+        `R$${String.fromCharCode(160)}5.000,00 com vencimento em 11/08/2024`,
       );
     });
 
