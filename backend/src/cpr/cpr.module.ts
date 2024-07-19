@@ -6,7 +6,8 @@ import { CprPhysicService } from './cpr-physic/cpr-physic.service';
 import { CreditorModule } from '../creditor/creditor.module';
 import { InMemoryRepository } from '../infra/repository/in-memory/in-memory.repository';
 import { CprEntity } from '../entities/cpr/cpr.entity';
-import { EmitterModule } from 'src/emitter/emitter.module';
+import { EmitterModule } from '../emitter/emitter.module';
+import { DeliveryPlaceModule } from '../delivery-place/delivery-place.module';
 
 @Module({
   controllers: [CprController, CprPhysicController],
@@ -18,6 +19,6 @@ import { EmitterModule } from 'src/emitter/emitter.module';
       useValue: new InMemoryRepository<CprEntity>(),
     },
   ],
-  imports: [CreditorModule, EmitterModule],
+  imports: [CreditorModule, EmitterModule, DeliveryPlaceModule],
 })
 export class CprModule {}

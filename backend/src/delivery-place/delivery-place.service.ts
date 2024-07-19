@@ -1,26 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { CreateDeliveryPlaceDto } from './dto/create-delivery-place.dto';
-import { UpdateDeliveryPlaceDto } from './dto/update-delivery-place.dto';
+import { Inject, Injectable } from '@nestjs/common';
+import { BaseService } from '../infra/service/base.service';
+import { CompanyEntity } from '../entities/person/company.entity';
+import { CRUDRepository } from '../infra/repository/crud.repository';
 
 @Injectable()
-export class DeliveryPlaceService {
-  create(createDeliveryPlaceDto: CreateDeliveryPlaceDto) {
-    return 'This action adds a new deliveryPlace';
-  }
-
-  findAll() {
-    return `This action returns all deliveryPlace`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} deliveryPlace`;
-  }
-
-  update(id: number, updateDeliveryPlaceDto: UpdateDeliveryPlaceDto) {
-    return `This action updates a #${id} deliveryPlace`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} deliveryPlace`;
+export class DeliveryPlaceService extends BaseService<CompanyEntity> {
+  constructor(
+    @Inject('KEY_REPOSITORY_DELIVERY_PLACE')
+    private readonly deliveryPlaceRepository: CRUDRepository<CompanyEntity>,
+  ) {
+    super(deliveryPlaceRepository);
   }
 }

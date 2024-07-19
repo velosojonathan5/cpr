@@ -7,16 +7,22 @@ export class CompanyEntity extends PersonEntity {
   cnpj: string;
   legalName: string;
   inscricaoEstadual: string;
-  legalRepresentative: IndividualEntity;
+  legalRepresentative?: IndividualEntity;
 
   protected constructor() {
     super();
   }
 
   get qualification(): string {
+    let legalRepresentativeText = '';
+
+    if (this.legalRepresentative) {
+      legalRepresentativeText = ` representada neste ato pelo seu Sócio Administrador ${this.legalRepresentative.name} portador de CPF ${FormatterUtil.formatCPF(this.legalRepresentative.cpf)}.`;
+    }
+
     return `${this.legalName}, pessoa jurídica de direito privado, inscrita no CNPJ ${FormatterUtil.formatCNPJ(this.cnpj)} e inscrição
       estadual nº ${this.inscricaoEstadual}, com sede na cidade de ${this.address.qualification}, telefone de contato
-      ${FormatterUtil.formatPhone(this.phone)}, e-mail: ${this.email}; representada neste ato pelo seu Sócio Administrador ${this.legalRepresentative.name} portador de CPF ${FormatterUtil.formatCPF(this.legalRepresentative.cpf)}.`;
+      ${FormatterUtil.formatPhone(this.phone)}, e-mail: ${this.email};${legalRepresentativeText}`;
   }
 
   static create(obj: {
@@ -27,7 +33,7 @@ export class CompanyEntity extends PersonEntity {
     phone: string;
     email: string;
     address: AddressEntity;
-    legalRepresentative: IndividualEntity;
+    legalRepresentative?: IndividualEntity;
   }): CompanyEntity {
     const {
       name,

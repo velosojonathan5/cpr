@@ -23,6 +23,7 @@ import {
   PossessionEnum,
   RegistryEntity,
 } from '../../entities/person/farm.entity';
+import { DeliveryPlaceService } from '../../delivery-place/delivery-place.service';
 
 const mockCprDto: CreateCprPhysicDto = {
   creditor: {
@@ -190,6 +191,23 @@ const mockEmitter = EmitterEntity.create(mockIndividual, [mockFarm]);
 
 const mockEmitterCompany = EmitterEntity.create(mockCompany, [mockFarm]);
 
+const mockDeliveryPlace = CompanyEntity.create({
+  name: 'Fazenda dos Patos 2',
+  cnpj: '44561357000114',
+  legalName: 'Fazenda dos Patos LTDA',
+  inscricaoEstadual: '1111111',
+  phone: '37999334679',
+  email: 'adm@pmginsumos.com',
+  address: AddressEntity.create({
+    postalCode: '35585000',
+    city: 'Pimenta',
+    state: StateEnum.MG,
+    publicArea: 'Rua Principal',
+    number: '640',
+    district: 'Centro',
+  }),
+});
+
 describe('CprPhysicService', () => {
   let service: CprPhysicService;
   let creditorService: CreditorService;
@@ -197,23 +215,31 @@ describe('CprPhysicService', () => {
   let creditorRepository: CRUDRepository<CreditorEntity>;
   let emitterService: EmitterService;
   let emitterRepository: CRUDRepository<EmitterEntity>;
+  let deliveryPlaceService: DeliveryPlaceService;
+  let deliveryPlaceRepository: CRUDRepository<CompanyEntity>;
 
   beforeEach(async () => {
     repository = new InMemoryRepository<CprEntity>();
     creditorRepository = new InMemoryRepository<CreditorEntity>();
     creditorService = new CreditorService(creditorRepository);
 
-    repository['data'] = [];
-    creditorRepository['data'] = [];
-
     emitterRepository = new InMemoryRepository<EmitterEntity>();
     emitterService = new EmitterService(emitterRepository);
+
+    deliveryPlaceRepository = new InMemoryRepository<CompanyEntity>();
+    deliveryPlaceService = new DeliveryPlaceService(deliveryPlaceRepository);
+
+    repository['data'] = [];
+    creditorRepository['data'] = [];
+    emitterRepository['data'] = [];
+    deliveryPlaceRepository['data'] = [];
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CprPhysicService,
         { provide: CreditorService, useValue: creditorService },
         { provide: EmitterService, useValue: emitterService },
+        { provide: DeliveryPlaceService, useValue: deliveryPlaceService },
         { provide: 'KEY_REPOSITORY_CPR', useValue: repository },
       ],
     }).compile();
@@ -233,6 +259,9 @@ describe('CprPhysicService', () => {
       emitterRepository.insert(mockEmitter);
       mockCprDto.emitter.id = mockEmitter.id;
       mockCprDto.productDevelopmentSite.id = mockFarm.id;
+
+      deliveryPlaceRepository.insert(mockDeliveryPlace);
+      mockCprDto.deliveryPlace.id = mockDeliveryPlace.id;
 
       const { id } = await service.create(mockCprDto);
 
@@ -350,6 +379,14 @@ describe('CprPhysicService', () => {
       expect(createdCPR.paymentSchedule[1].qualification).toBe(
         `R$${String.fromCharCode(160)}5.000,00 com vencimento em 11/08/2024`,
       );
+
+      // TODO add check if sum of paymentSchedule is equal CPR value
+
+      expect(createdCPR.deliveryPlace.qualification)
+        .toBe(`Fazenda dos Patos LTDA, pessoa jurídica de direito privado, inscrita no CNPJ 44.561.357/0001-14 e inscrição
+      estadual nº 1111111, com sede na cidade de Pimenta/MG, à Rua Principal, nº
+      640 - Bairro: Centro, CEP: 35585-000, telefone de contato
+      (37) 99933-4679, e-mail: adm@pmginsumos.com;`);
     });
 
     it('should create a physc CPR when emitter is a company', async () => {
@@ -358,6 +395,9 @@ describe('CprPhysicService', () => {
 
       emitterRepository.insert(mockEmitterCompany);
       mockCprDto.emitter.id = mockEmitterCompany.id;
+
+      deliveryPlaceRepository.insert(mockDeliveryPlace);
+      mockCprDto.deliveryPlace.id = mockDeliveryPlace.id;
 
       const { id } = await service.create(mockCprDto);
 
@@ -377,6 +417,9 @@ describe('CprPhysicService', () => {
 
       emitterRepository.insert(mockEmitterCompany);
       mockCprDto.emitter.id = mockEmitterCompany.id;
+
+      deliveryPlaceRepository.insert(mockDeliveryPlace);
+      mockCprDto.deliveryPlace.id = mockDeliveryPlace.id;
 
       mockCprDto.guarantor = {
         name: 'Fazenda Agricampo',

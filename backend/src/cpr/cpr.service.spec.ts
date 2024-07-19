@@ -4,6 +4,7 @@ import { CprEntity } from '../entities/cpr/cpr.entity';
 import { InMemoryRepository } from '../infra/repository/in-memory/in-memory.repository';
 import { CreditorService } from '../creditor/creditor.service';
 import { EmitterService } from '../emitter/emitter.service';
+import { DeliveryPlaceService } from '../delivery-place/delivery-place.service';
 
 describe('CprService', () => {
   let service: CprService<CprEntity>;
@@ -18,6 +19,7 @@ describe('CprService', () => {
         { provide: 'KEY_REPOSITORY_CPR', useValue: repository },
         { provide: CreditorService, useValue: {} },
         { provide: EmitterService, useValue: {} },
+        { provide: DeliveryPlaceService, useValue: {} },
       ],
     }).compile();
 

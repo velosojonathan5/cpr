@@ -5,6 +5,7 @@ import { EmitterEntity } from '../person/emitter.entity';
 import { GuarantorEntity } from '../person/guarantor.entity';
 import { ProductEntity } from '../product.entity';
 import { FarmEntity } from '../person/farm.entity';
+import { CompanyEntity } from '../person/company.entity';
 
 export class PaymentEntity extends TenantEntity {
   dueDate: Date;
@@ -41,6 +42,7 @@ export class CprEntity extends TenantEntity {
   quantity: number;
   productDevelopmentSite: FarmEntity;
   paymentSchedule: PaymentEntity[];
+  deliveryPlace: CompanyEntity;
 
   get sacas(): number {
     return this.quantity / 60;
@@ -88,9 +90,8 @@ export class CprEntity extends TenantEntity {
       quantity,
       productDevelopmentSite,
       paymentSchedule,
+      deliveryPlace,
     } = obj;
-
-    // console.log(paymentSchedule[0].qualification);
 
     return Object.assign(new CprEntity(), {
       creditor,
@@ -101,6 +102,7 @@ export class CprEntity extends TenantEntity {
       quantity,
       productDevelopmentSite,
       paymentSchedule,
+      deliveryPlace,
     });
   }
 }

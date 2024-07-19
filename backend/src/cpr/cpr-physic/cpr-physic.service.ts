@@ -27,6 +27,10 @@ export class CprPhysicService extends CprService<CprPhysicEntity> {
       createCprPhysicDto.emitter.id,
     );
 
+    const deliveryPlace = await this.deliveryPlaceService.getById(
+      createCprPhysicDto.deliveryPlace.id,
+    );
+
     let guarantor: GuarantorEntity;
 
     if (createCprPhysicDto.guarantor) {
@@ -54,6 +58,7 @@ export class CprPhysicService extends CprService<CprPhysicEntity> {
       paymentSchedule: paymentSchedule.map((p) =>
         PaymentEntity.create(p.dueDate, p.value),
       ),
+      deliveryPlace,
     });
 
     // arquitetura orientada a eventos?
