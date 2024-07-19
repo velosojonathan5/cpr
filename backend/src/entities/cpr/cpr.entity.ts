@@ -1,8 +1,10 @@
+import { FormatterUtil } from '../../util/formatter.util';
 import { TenantEntity } from '../../infra/entities/tenant.entity';
 import { CreditorEntity } from '../person/creditor.entity';
 import { EmitterEntity } from '../person/emitter.entity';
 import { GuarantorEntity } from '../person/guarantor.entity';
 import { ProductEntity } from '../product.entity';
+import { FarmEntity } from '../person/farm.entity';
 
 export class CprEntity extends TenantEntity {
   number: string;
@@ -12,9 +14,18 @@ export class CprEntity extends TenantEntity {
   product: ProductEntity;
   crop: string;
   quantity: number;
+  productDevelopmentSite: FarmEntity;
 
   get sacas(): number {
     return this.quantity / 60;
+  }
+
+  get sacasFormatted(): string {
+    return FormatterUtil.toNumberPTBR(this.sacas, 2);
+  }
+
+  get quantityFormatted(): string {
+    return FormatterUtil.toNumberPTBR(this.quantity);
   }
 
   protected constructor() {
@@ -42,7 +53,15 @@ export class CprEntity extends TenantEntity {
   }
 
   static create(obj: Partial<CprEntity>): CprEntity {
-    const { creditor, emitter, guarantor, product, crop, quantity } = obj;
+    const {
+      creditor,
+      emitter,
+      guarantor,
+      product,
+      crop,
+      quantity,
+      productDevelopmentSite,
+    } = obj;
     return Object.assign(new CprEntity(), {
       creditor,
       emitter,
@@ -50,6 +69,7 @@ export class CprEntity extends TenantEntity {
       product,
       crop,
       quantity,
+      productDevelopmentSite,
     });
   }
 }

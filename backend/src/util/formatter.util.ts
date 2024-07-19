@@ -24,4 +24,15 @@ export class FormatterUtil {
   static formatDateBR(date: Date) {
     return date.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });
   }
+
+  static toNumberPTBR(
+    value: number,
+    maximumFractionDigits = 2,
+    minimumFractionDigits = 2,
+  ) {
+    return value.toLocaleString('pt-BR', {
+      maximumFractionDigits,
+      minimumFractionDigits,
+    });
+  }
 }

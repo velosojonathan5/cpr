@@ -18,6 +18,11 @@ import { EmitterService } from '../../emitter/emitter.service';
 import { EmitterEntity } from '../../entities/person/emitter.entity';
 import { CompanyEntity } from '../../entities/person/company.entity';
 import { ProductKeyEnum } from '../../entities/product.entity';
+import {
+  FarmEntity,
+  PossessionEnum,
+  RegistryEntity,
+} from '../../entities/person/farm.entity';
 
 const mockCprDto: CreateCprPhysicDto = {
   creditor: {
@@ -28,7 +33,7 @@ const mockCprDto: CreateCprPhysicDto = {
   },
   productDevelopmentSite: {
     id: '0190a308-15df-725b-a6f3-4c591248221a',
-    cultivatedArea: 10,
+    cultivatedArea: 540,
   },
   deliveryPlace: {
     id: '0190a308-15df-725b-a6f3-4c591248221a',
@@ -159,9 +164,27 @@ const mockCompany = CompanyEntity.create({
   legalRepresentative: mockLegalRepresentative,
 });
 
-const mockEmitter = EmitterEntity.create(mockIndividual);
+const mockRegistry = RegistryEntity.create({ number: 'MAT11333' });
 
-const mockEmitterCompany = EmitterEntity.create(mockCompany);
+const mockFarm = FarmEntity.create({
+  name: 'Fazenda Dois Irmãos',
+  cnpj: '67664457000171',
+  legalName: 'Fazenda Dois Irmãos LTDA',
+  inscricaoEstadual: '698468468',
+  phone: '37999334671',
+  email: 'fadois@gmail.com',
+  address: mockAddress,
+  legalRepresentative: undefined,
+  tatalArea: 200,
+  cultivatedArea: 1000,
+  nirf: 'NIRF7700',
+  possession: PossessionEnum.OWNER,
+  registry: mockRegistry,
+});
+
+const mockEmitter = EmitterEntity.create(mockIndividual, [mockFarm]);
+
+const mockEmitterCompany = EmitterEntity.create(mockCompany, [mockFarm]);
 
 describe('CprPhysicService', () => {
   let service: CprPhysicService;
@@ -205,6 +228,7 @@ describe('CprPhysicService', () => {
 
       emitterRepository.insert(mockEmitter);
       mockCprDto.emitter.id = mockEmitter.id;
+      mockCprDto.productDevelopmentSite.id = mockFarm.id;
 
       const { id } = await service.create(mockCprDto);
 
@@ -256,6 +280,65 @@ describe('CprPhysicService', () => {
       expect(createdCPR.crop).toBe('2024/2025');
       expect(createdCPR.quantity).toBe(24580);
       expect(createdCPR.sacas).toBe(409.6666666666667);
+
+      expect(createdCPR.productDevelopmentSite.cultivatedArea).toBe(540);
+
+      expect(createdCPR.productDevelopmentSite.qualifications[0].label).toBe(
+        'Imóvel rural',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[0].content).toBe(
+        'Fazenda Dois Irmãos LTDA',
+      );
+
+      expect(createdCPR.productDevelopmentSite.qualifications[1].label).toBe(
+        'Inscrição Estadual',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[1].content).toBe(
+        '698468468',
+      );
+
+      expect(createdCPR.productDevelopmentSite.qualifications[2].label).toBe(
+        'Localização do imóvel rural',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[2].content).toBe(
+        `Pimenta/MG, à Rua Principal, nº
+      640, apto 101, (1234) - Bairro: Centro, CEP: 35585-000`,
+      );
+
+      expect(createdCPR.productDevelopmentSite.qualifications[3].label).toBe(
+        'Área total em hectares',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[3].content).toBe(
+        '200,00',
+      );
+
+      expect(createdCPR.productDevelopmentSite.qualifications[4].label).toBe(
+        'Área cultivada em hectares',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[4].content).toBe(
+        '540,00',
+      );
+
+      expect(createdCPR.productDevelopmentSite.qualifications[5].label).toBe(
+        'NIRF',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[5].content).toBe(
+        'NIRF7700',
+      );
+
+      expect(createdCPR.productDevelopmentSite.qualifications[6].label).toBe(
+        'Posse',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[6].content).toBe(
+        'proprietário',
+      );
+
+      expect(createdCPR.productDevelopmentSite.qualifications[7].label).toBe(
+        'Número da matrícula',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[7].content).toBe(
+        'MAT11333',
+      );
     });
 
     it('should create a physc CPR when emitter is a company', async () => {

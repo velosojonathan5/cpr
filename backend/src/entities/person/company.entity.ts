@@ -28,7 +28,7 @@ export class CompanyEntity extends PersonEntity {
     email: string;
     address: AddressEntity;
     legalRepresentative: IndividualEntity;
-  }) {
+  }): CompanyEntity {
     const {
       name,
       cnpj,

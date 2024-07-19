@@ -26,6 +26,7 @@ class BasicIdDto {
 
 class productDevelopmentSiteDto extends BasicIdDto {
   @ApiProperty({ required: false })
+  @IsOptional()
   @IsNumber()
   @IsPositive()
   cultivatedArea?: number;
