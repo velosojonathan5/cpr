@@ -263,6 +263,11 @@ describe('CprPhysicService', () => {
       deliveryPlaceRepository.insert(mockDeliveryPlace);
       mockCprDto.deliveryPlace.id = mockDeliveryPlace.id;
 
+      const specificDate = new Date('2023-07-22T10:20:30Z');
+
+      jest.useFakeTimers();
+      jest.setSystemTime(specificDate);
+
       const { id } = await service.create(mockCprDto);
 
       const createdCPR = await repository.getById(id);
@@ -392,7 +397,11 @@ describe('CprPhysicService', () => {
 
       expect(createdCPR.product.specialConditios).toBeDefined();
 
-      console.log('createdAt', createdCPR.createdAt);
+      expect(createdCPR.issueDate.toISOString()).toBe(
+        specificDate.toISOString(),
+      );
+
+      expect(createdCPR.issueDateFormatted).toBe('22/07/2023');
     });
 
     it('should create a physc CPR when emitter is a company', async () => {

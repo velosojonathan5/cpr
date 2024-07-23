@@ -45,6 +45,7 @@ export class CprEntity extends TenantEntity {
   paymentSchedule: PaymentEntity[];
   deliveryPlace: CompanyEntity;
   value: number;
+  issueDate: Date;
 
   get sacas(): number {
     return this.quantity / 60;
@@ -58,9 +59,14 @@ export class CprEntity extends TenantEntity {
     return FormatterUtil.toNumberPTBR(this.quantity);
   }
 
+  get issueDateFormatted(): string {
+    return FormatterUtil.formatDateBR(this.issueDate);
+  }
+
   protected constructor() {
     super();
 
+    this.issueDate = new Date();
     this.generateNumber();
   }
 
