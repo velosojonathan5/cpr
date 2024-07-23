@@ -6,6 +6,7 @@ import { GuarantorEntity } from '../person/guarantor.entity';
 import { ProductEntity } from '../product.entity';
 import { FarmEntity } from '../person/farm.entity';
 import { CompanyEntity } from '../person/company.entity';
+import { BadRequestException } from '@nestjs/common';
 
 export class PaymentEntity extends TenantEntity {
   dueDate: Date;
@@ -43,6 +44,7 @@ export class CprEntity extends TenantEntity {
   productDevelopmentSite: FarmEntity;
   paymentSchedule: PaymentEntity[];
   deliveryPlace: CompanyEntity;
+  value: number;
 
   get sacas(): number {
     return this.quantity / 60;
@@ -80,6 +82,10 @@ export class CprEntity extends TenantEntity {
     this.number = `${formatedDate}${numeroAleatorio}`;
   }
 
+  get valueFormatted(): string {
+    return FormatterUtil.toBRL(this.value);
+  }
+
   static create(obj: Partial<CprEntity>): CprEntity {
     const {
       creditor,
@@ -91,9 +97,10 @@ export class CprEntity extends TenantEntity {
       productDevelopmentSite,
       paymentSchedule,
       deliveryPlace,
+      value,
     } = obj;
 
-    return Object.assign(new CprEntity(), {
+    const cpr = Object.assign(new CprEntity(), {
       creditor,
       emitter,
       guarantor,
@@ -103,6 +110,20 @@ export class CprEntity extends TenantEntity {
       productDevelopmentSite,
       paymentSchedule,
       deliveryPlace,
+      value,
     });
+
+    let sumPaymentSchedule = 0;
+    for (const p of cpr.paymentSchedule) {
+      sumPaymentSchedule += p.value;
+    }
+
+    if (sumPaymentSchedule !== cpr.value) {
+      throw new BadRequestException(
+        'A soma dos valores do cronograma de pagamentos deve ser igual ao valor da CPR.',
+      );
+    }
+
+    return cpr;
   }
 }

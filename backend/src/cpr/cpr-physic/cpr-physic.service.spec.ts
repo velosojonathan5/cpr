@@ -380,7 +380,9 @@ describe('CprPhysicService', () => {
         `R$${String.fromCharCode(160)}5.000,00 com vencimento em 11/08/2024`,
       );
 
-      // TODO add check if sum of paymentSchedule is equal CPR value
+      expect(createdCPR.valueFormatted).toBe(
+        `R$${String.fromCharCode(160)}10.000,00`,
+      );
 
       expect(createdCPR.deliveryPlace.qualification)
         .toBe(`Fazenda dos Patos LTDA, pessoa jurídica de direito privado, inscrita no CNPJ 44.561.357/0001-14 e inscrição
@@ -478,6 +480,33 @@ describe('CprPhysicService', () => {
       estadual nº 2222222, com sede na cidade de Belo Horizonte/MG, à Rua Albita, nº
       820 - Bairro: Cruzeiro, CEP: 30310-330, telefone de contato
       (37) 99933-4679, e-mail: agricampo@pmginsumos.com; representada neste ato pelo seu Sócio Administrador Paula Toller portador de CPF 135.276.940-99.`,
+      );
+    });
+
+    it('Should throw exception when schedule payment sum is not equal to the CPR value', async () => {
+      creditorRepository.insert(mockCreditor);
+      mockCprDto.creditor.id = mockCreditor.id;
+
+      emitterRepository.insert(mockEmitterCompany);
+      mockCprDto.emitter.id = mockEmitterCompany.id;
+
+      deliveryPlaceRepository.insert(mockDeliveryPlace);
+      mockCprDto.deliveryPlace.id = mockDeliveryPlace.id;
+
+      mockCprDto.value = 9999.99;
+
+      const fn = async () => await service.create(mockCprDto);
+
+      await expect(fn()).rejects.toThrow(
+        'A soma dos valores do cronograma de pagamentos deve ser igual ao valor da CPR.',
+      );
+
+      mockCprDto.value = 10000.01;
+
+      const fn2 = async () => await service.create(mockCprDto);
+
+      await expect(fn2()).rejects.toThrow(
+        'A soma dos valores do cronograma de pagamentos deve ser igual ao valor da CPR.',
       );
     });
   });
