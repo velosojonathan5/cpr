@@ -389,6 +389,10 @@ describe('CprPhysicService', () => {
       estadual nº 1111111, com sede na cidade de Pimenta/MG, à Rua Principal, nº
       640 - Bairro: Centro, CEP: 35585-000, telefone de contato
       (37) 99933-4679, e-mail: adm@pmginsumos.com;`);
+
+      expect(createdCPR.product.specialConditios).toBeDefined();
+
+      console.log('createdAt', createdCPR.createdAt);
     });
 
     it('should create a physc CPR when emitter is a company', async () => {
