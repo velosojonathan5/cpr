@@ -46,8 +46,14 @@ export class CprPhysicService extends CprService<CprPhysicEntity> {
         createCprPhysicDto.productDevelopmentSite.cultivatedArea;
     }
 
-    const { product, crop, quantity, paymentSchedule, value } =
-      createCprPhysicDto;
+    const {
+      product,
+      crop,
+      quantity,
+      paymentSchedule,
+      value,
+      responsibleForExpenses,
+    } = createCprPhysicDto;
     const cpr = CprPhysicEntity.create({
       creditor,
       emitter,
@@ -61,6 +67,7 @@ export class CprPhysicService extends CprService<CprPhysicEntity> {
       ),
       deliveryPlace,
       value,
+      responsibleForExpenses,
     });
 
     // arquitetura orientada a eventos?

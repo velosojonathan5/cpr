@@ -17,6 +17,7 @@ import {
   MatrimonialRegimeEnum,
 } from '../../../entities/person/individual.entity';
 import { ProductKeyEnum } from '../../../entities/product.entity';
+import { ResponsibleForExpensesEnum } from '../../../entities/cpr/cpr.entity';
 
 class BasicIdDto {
   @ApiProperty({ example: '0190a308-15df-725b-a6f3-4c591248221a' })
@@ -148,10 +149,6 @@ export class CreateGuarantorDto extends CreatePersonDto {
   legalRepresentative?: CreateGuarantorDto;
 }
 
-enum CurrencyCodeEnum {
-  BRL = 'BRL',
-}
-
 enum CropEnum {
   '2024/2025' = '2024/2025',
   '2025/2026' = '2025/2026',
@@ -231,8 +228,10 @@ export class CreateCprPhysicDto {
   @IsPositive()
   value: number;
 
-  @ApiProperty({ enum: CurrencyCodeEnum, description: 'Moeda' })
-  // @IsEnum(CurrencyCodeEnum)
-  // currencyCode: CurrencyCodeEnum;
-  currencyCode: string;
+  @ApiProperty({
+    enum: ResponsibleForExpensesEnum,
+    description: 'Responsabilidade pelas despesas',
+  })
+  @IsEnum(ResponsibleForExpensesEnum)
+  responsibleForExpenses: ResponsibleForExpensesEnum;
 }

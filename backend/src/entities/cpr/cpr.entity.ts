@@ -33,6 +33,11 @@ export class PaymentEntity extends TenantEntity {
   }
 }
 
+export enum ResponsibleForExpensesEnum {
+  CREDITOR = 'CREDITOR',
+  EMITTER = 'EMITTER',
+}
+
 export class CprEntity extends TenantEntity {
   number: string;
   creditor: CreditorEntity;
@@ -46,6 +51,7 @@ export class CprEntity extends TenantEntity {
   deliveryPlace: CompanyEntity;
   value: number;
   issueDate: Date;
+  responsibleForExpenses: ResponsibleForExpensesEnum;
 
   get sacas(): number {
     return this.quantity / 60;
@@ -61,6 +67,16 @@ export class CprEntity extends TenantEntity {
 
   get issueDateFormatted(): string {
     return FormatterUtil.formatDateBR(this.issueDate);
+  }
+
+  get responsibleForExpensesText() {
+    const options = {
+      [ResponsibleForExpensesEnum.CREDITOR]:
+        'Do preço definitivo fixado conforme acima, a CREDORA já efetuou as retenções determinadas pela legislação vigente, quer sejam decorrentes de legislação federal, estadual ou municipal.',
+      [ResponsibleForExpensesEnum.EMITTER]: `O EMITENTE declara ter pleno conhecimento, e estar de pleno acordo, de que a CREDORA, efetuará uma retenção em reais, de acordo com sua tabela de descontos, destinada a remuneração dos serviços de entrega da mercadoria no ${this.deliveryPlace.legalName}, tais como: despesas de recebimento, limpeza, secagem da mercadoria; despesas de armazenagem e expedição da mercadoria; e todas as demais despesas operacionais e margem da CREDORA.`,
+    };
+
+    return options[this.responsibleForExpenses];
   }
 
   protected constructor() {
@@ -104,6 +120,7 @@ export class CprEntity extends TenantEntity {
       paymentSchedule,
       deliveryPlace,
       value,
+      responsibleForExpenses,
     } = obj;
 
     const cpr = Object.assign(new CprEntity(), {
@@ -117,6 +134,7 @@ export class CprEntity extends TenantEntity {
       paymentSchedule,
       deliveryPlace,
       value,
+      responsibleForExpenses,
     });
 
     let sumPaymentSchedule = 0;

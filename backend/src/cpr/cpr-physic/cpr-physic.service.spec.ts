@@ -3,7 +3,10 @@ import { CprPhysicService } from './cpr-physic.service';
 import { CreateCprPhysicDto } from './dto/create-cpr-physic.dto';
 import { CreditorService } from '../../creditor/creditor.service';
 import { CRUDRepository } from '../../infra/repository/crud.repository';
-import { CprEntity } from '../../entities/cpr/cpr.entity';
+import {
+  CprEntity,
+  ResponsibleForExpensesEnum,
+} from '../../entities/cpr/cpr.entity';
 import { InMemoryRepository } from '../../infra/repository/in-memory/in-memory.repository';
 import { CreditorEntity } from '../../entities/person/creditor.entity';
 import { AddressEntity } from '../../entities/person/address.entity';
@@ -92,7 +95,7 @@ const mockCprDto: CreateCprPhysicDto = {
     },
   ],
   value: 10000,
-  currencyCode: 'BRL',
+  responsibleForExpenses: ResponsibleForExpensesEnum.EMITTER,
 };
 
 const mockAddress = AddressEntity.create({
@@ -402,6 +405,10 @@ describe('CprPhysicService', () => {
       );
 
       expect(createdCPR.issueDateFormatted).toBe('22/07/2023');
+
+      expect(createdCPR.responsibleForExpensesText).toBe(
+        `O EMITENTE declara ter pleno conhecimento, e estar de pleno acordo, de que a CREDORA, efetuará uma retenção em reais, de acordo com sua tabela de descontos, destinada a remuneração dos serviços de entrega da mercadoria no Fazenda dos Patos LTDA, tais como: despesas de recebimento, limpeza, secagem da mercadoria; despesas de armazenagem e expedição da mercadoria; e todas as demais despesas operacionais e margem da CREDORA.`,
+      );
     });
 
     it('should create a physc CPR when emitter is a company', async () => {
