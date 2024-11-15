@@ -205,8 +205,7 @@ export class CreateCprPhysicDto {
   product: ProductKeyEnum;
 
   @ApiProperty({ enum: CropEnum, description: 'Safra' })
-  // @IsEnum(CropEnum)
-  // crop: CropEnum;
+  @IsEnum(CropEnum)
   crop: string;
 
   @ApiProperty({ description: 'Quantidade' })

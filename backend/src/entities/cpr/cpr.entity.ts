@@ -69,6 +69,13 @@ export class CprEntity extends TenantEntity {
     return FormatterUtil.formatDateBR(this.issueDate);
   }
 
+  get paymentScheduleText(): string {
+    const text = this.paymentSchedule.map(
+      (p, i) => i + 1 + 'ª parcela de ' + p.qualification,
+    );
+    return text.join(', ');
+  }
+
   get responsibleForExpensesText() {
     const options = {
       [ResponsibleForExpensesEnum.CREDITOR]:
