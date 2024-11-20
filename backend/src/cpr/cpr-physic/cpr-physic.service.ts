@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   CreateCprPhysicDto,
   CreateGuarantorDto,
@@ -70,11 +70,12 @@ export class CprPhysicService extends CprService<CprPhysicEntity> {
       responsibleForExpenses,
     });
 
-    // arquitetura orientada a eventos?
     // TODO: criar lógica para elcolher o modelo a ser usado
-    const cprDocumentModel = new DefaultCprPhysicDocumentModel(cpr);
-    const doc = cprDocumentModel.generateDocument();
-    doc.pipe(createWriteStream('cpr.pdf'));
+    const document = this.cprDocumentFactory.createDocument(cpr);
+
+    // const cprDocumentModel = new DefaultCprPhysicDocumentModel(cpr);
+    // const doc = cprDocumentModel.generateDocument();
+    // doc.pipe(createWriteStream('cpr.pdf'));
 
     super.save(cpr);
 
