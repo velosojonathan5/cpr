@@ -1,5 +1,5 @@
 import { Readable } from 'node:stream';
-import { CprDocument } from '../cpr-document';
+import { CprDocument, SectionTemplate, Signatory } from '../cpr-document';
 import { CprDocumentGenerator } from '../cpr-document-generator';
 import * as PDFDocument from 'pdfkit';
 
@@ -9,8 +9,35 @@ export class PDFKitCprGenerator implements CprDocumentGenerator {
 
     const doc = new PDFDocument({ bufferPages: true });
 
-    // PARTE DE CRIAR O READABLE STREAM
-    // --------------------------------
+    const stream: Readable = this.createReadableStream(doc);
+
+    if (headerImagePath) {
+      this.createHeaderImage(doc, headerImagePath);
+    }
+
+    this.createTitle(doc);
+
+    this.createSections(doc, sections);
+
+    this.createSignatories(doc, signatories);
+
+    this.addPagination(doc);
+
+    doc.info = {
+      Title: 'Cédula de Produto Rural',
+      // TODO definir meta data na interface CprDocument
+      Author: 'CPR Digital',
+      Subject: 'CPR Digital',
+    };
+
+    doc.flushPages();
+
+    doc.end();
+
+    return stream;
+  }
+
+  private createReadableStream(doc: PDFKit.PDFDocument): Readable {
     const stream = new Readable({
       read() {},
     });
@@ -18,23 +45,27 @@ export class PDFKitCprGenerator implements CprDocumentGenerator {
     doc.on('data', (chunk) => stream.push(chunk));
     doc.on('end', () => stream.push(null));
     doc.on('error', (err) => stream.destroy(err));
-    // --------------------------------
+    return stream;
+  }
 
-    if (headerImagePath) {
-      const pageWidth = doc.page.width;
-      doc.image(headerImagePath, 0, 0, {
-        width: pageWidth,
-        align: 'center',
-      });
-    }
+  private createHeaderImage(doc: PDFKit.PDFDocument, headerImagePath: string) {
+    const pageWidth = doc.page.width;
+    doc.image(headerImagePath, 0, 0, {
+      width: pageWidth,
+      align: 'center',
+    });
+  }
 
+  private createTitle(doc: PDFKit.PDFDocument) {
     doc.moveDown();
     doc.moveDown();
 
     doc.font('Helvetica-Bold');
     doc.fillColor('#468F5D');
     doc.fontSize(30).text('CÉDULA DE PRODUTO RURAL', { align: 'center' });
+  }
 
+  private createSections(doc: PDFKit.PDFDocument, sections: SectionTemplate[]) {
     sections.forEach(({ title, content }) => {
       if (!title && !content) return;
 
@@ -58,9 +89,9 @@ export class PDFKitCprGenerator implements CprDocumentGenerator {
         });
       }
     });
+  }
 
-    // ASSINATURA
-
+  private createSignatories(doc: PDFKit.PDFDocument, signatories: Signatory[]) {
     signatories.forEach((s) => {
       doc.moveDown(2);
 
@@ -79,8 +110,9 @@ export class PDFKitCprGenerator implements CprDocumentGenerator {
       // Adicionar o nome do signatário abaixo da linha
       doc.fontSize(12).text(`${s.name} - ${s.role}`, posicaoX, posicaoY + 10);
     });
+  }
 
-    // Adiciona paginação
+  private addPagination(doc: PDFKit.PDFDocument) {
     const pageCount = doc.bufferedPageRange().count;
     for (let i = 0; i < pageCount; i++) {
       doc.switchToPage(i);
@@ -97,12 +129,5 @@ export class PDFKitCprGenerator implements CprDocumentGenerator {
 
       doc.page.margins.bottom = bottomMargin; // Restaura a margem inferior
     }
-
-    // finaliza doc
-    doc.flushPages();
-
-    doc.end();
-
-    return stream;
   }
 }
