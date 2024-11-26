@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   CreateCprPhysicDto,
   CreateGuarantorDto,
@@ -11,8 +11,7 @@ import { CompanyEntity } from '../../entities/person/company.entity';
 import { AddressEntity } from '../../entities/person/address.entity';
 import { ProductEntity } from '../../entities/product.entity';
 import { PaymentEntity } from '../../entities/cpr/cpr.entity';
-import { DefaultCprPhysicDocumentModel } from './default-cpr-physic-document-model';
-import { createWriteStream } from 'fs';
+import { createWriteStream } from 'node:fs';
 
 @Injectable()
 export class CprPhysicService extends CprService<CprPhysicEntity> {
@@ -70,12 +69,10 @@ export class CprPhysicService extends CprService<CprPhysicEntity> {
       responsibleForExpenses,
     });
 
-    // TODO: criar lógica para elcolher o modelo a ser usado
-    const document = this.cprDocumentFactory.createDocument(cpr);
+    const document = this.cprDocumentFactory.generateDocument(cpr);
 
-    // const cprDocumentModel = new DefaultCprPhysicDocumentModel(cpr);
-    // const doc = cprDocumentModel.generateDocument();
-    // doc.pipe(createWriteStream('cpr.pdf'));
+    // const writeStream = createWriteStream('cpr.pdf');
+    // document.pipe(writeStream);
 
     super.save(cpr);
 
