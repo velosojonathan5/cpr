@@ -23,12 +23,10 @@ export class PDFKitCprGenerator implements CprDocumentGenerator {
 
     this.addPagination(doc);
 
-    doc.info = {
-      Title: 'Cédula de Produto Rural',
-      // TODO definir meta data na interface CprDocument
-      Author: 'CPR Digital',
-      Subject: 'CPR Digital',
-    };
+    doc.info.Title = 'Cédula de Produto Rural';
+    doc.info.Subject = 'CPR Digital';
+    // TODO definir meta data na interface CprDocument para incluir metadata conforme usuario
+    // doc.info.Author = 'Nome do usuário';
 
     doc.flushPages();
 
