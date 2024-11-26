@@ -1,4 +1,4 @@
-import { PDFKitCprGenerator } from './pdfkit-cpr-generator'; // Ajuste o caminho conforme necessário
+import { PDFKitCprGenerator } from './pdfkit-cpr-generator';
 import { CprDocument } from '../cpr-document';
 import { Readable } from 'node:stream';
 
