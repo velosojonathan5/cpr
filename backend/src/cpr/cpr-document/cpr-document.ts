@@ -11,6 +11,6 @@ export type Signatory = { role: string; name: string; email: string };
 
 export interface CprDocument {
   sections: SectionTemplate[];
-  signatures: Signatory[];
-  headerImage: string;
+  signatories: Signatory[];
+  headerImagePath: string;
 }

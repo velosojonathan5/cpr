@@ -193,9 +193,10 @@ export class PMGCprDataModel {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   generateData(cpr: CprEntity): CprDocument {
     // implementar aqui logica que gera os dados do documento com as sessões
-    const signatures = this.getSignatories(cpr);
+    const signatories = this.getSignatories(cpr);
     const sections = this.getSections(cpr);
-    return { sections, signatures } as unknown as CprDocument;
+    const headerImagePath = 'src/assets/images/capaPMG.jpg';
+    return { sections, signatories, headerImagePath };
   }
 
   private getSections(

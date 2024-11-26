@@ -27,6 +27,8 @@ import {
   RegistryEntity,
 } from '../../entities/person/farm.entity';
 import { DeliveryPlaceService } from '../../delivery-place/delivery-place.service';
+import { CprDocumentFactory } from '../cpr-document/cpr-document-factory';
+import { Readable } from 'node:stream';
 
 const mockCprDto: CreateCprPhysicDto = {
   creditor: {
@@ -220,6 +222,7 @@ describe('CprPhysicService', () => {
   let emitterRepository: CRUDRepository<EmitterEntity>;
   let deliveryPlaceService: DeliveryPlaceService;
   let deliveryPlaceRepository: CRUDRepository<CompanyEntity>;
+  let cprDocumentFactory: CprDocumentFactory;
 
   beforeEach(async () => {
     repository = new InMemoryRepository<CprEntity>();
@@ -231,6 +234,13 @@ describe('CprPhysicService', () => {
 
     deliveryPlaceRepository = new InMemoryRepository<CompanyEntity>();
     deliveryPlaceService = new DeliveryPlaceService(deliveryPlaceRepository);
+
+    cprDocumentFactory = {
+      generateDocument: () =>
+        new Readable({
+          read() {},
+        }),
+    } as unknown as CprDocumentFactory;
 
     repository['data'] = [];
     creditorRepository['data'] = [];
@@ -244,6 +254,7 @@ describe('CprPhysicService', () => {
         { provide: EmitterService, useValue: emitterService },
         { provide: DeliveryPlaceService, useValue: deliveryPlaceService },
         { provide: 'KEY_REPOSITORY_CPR', useValue: repository },
+        { provide: 'CPR_DOCUMENT_FACTORY', useValue: cprDocumentFactory },
       ],
     }).compile();
 

@@ -8,7 +8,7 @@ import { InMemoryRepository } from '../infra/repository/in-memory/in-memory.repo
 import { CprEntity } from '../entities/cpr/cpr.entity';
 import { EmitterModule } from '../emitter/emitter.module';
 import { DeliveryPlaceModule } from '../delivery-place/delivery-place.module';
-import { PDFKitCprGenerator } from './cpr-document/pdf-kit-cpr-generator/pdf-kit-cpr-generator';
+import { PDFKitCprGenerator } from './cpr-document/pdfkit-cpr-generator/pdfkit-cpr-generator';
 import { CprDocumentFactory } from './cpr-document/cpr-document-factory';
 
 @Module({
