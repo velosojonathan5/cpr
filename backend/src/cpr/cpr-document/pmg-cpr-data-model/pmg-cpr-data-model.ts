@@ -1,6 +1,5 @@
 import { CprEntity } from 'src/entities/cpr/cpr.entity';
 import { CprDocument, SectionTemplate, Signatory } from '../cpr-document';
-import { Section } from 'src/cpr/cpr-physic/cpr-physic-document-model';
 
 // TODO: MOVE TO UTILS FILE
 const sanitize = (text: string) => {
@@ -199,7 +198,9 @@ export class PMGCprDataModel {
     return { sections, signatures } as unknown as CprDocument;
   }
 
-  private getSections(cpr: CprEntity): Section[] {
+  private getSections(
+    cpr: CprEntity,
+  ): { title: string; content: string | string[] }[] {
     return sections.map((section) => ({
       title: section.title ?? section.titleFn(cpr),
       content: section.content ?? section.contentFn(cpr),

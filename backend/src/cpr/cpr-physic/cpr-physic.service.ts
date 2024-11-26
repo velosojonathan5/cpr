@@ -71,8 +71,8 @@ export class CprPhysicService extends CprService<CprPhysicEntity> {
 
     const document = this.cprDocumentFactory.generateDocument(cpr);
 
-    // const writeStream = createWriteStream('cpr.pdf');
-    // document.pipe(writeStream);
+    const writeStream = createWriteStream('cpr.pdf');
+    document.pipe(writeStream);
 
     super.save(cpr);
 
