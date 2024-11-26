@@ -5,13 +5,22 @@ import { InMemoryRepository } from '../infra/repository/in-memory/in-memory.repo
 import { CreditorService } from '../creditor/creditor.service';
 import { EmitterService } from '../emitter/emitter.service';
 import { DeliveryPlaceService } from '../delivery-place/delivery-place.service';
+import { CprDocumentFactory } from './cpr-document/cpr-document-factory';
+import { Readable } from 'node:stream';
 
 describe('CprService', () => {
   let service: CprService<CprEntity>;
   let repository: InMemoryRepository<CprEntity>;
+  let cprDocumentFactory: CprDocumentFactory;
 
   beforeEach(async () => {
     repository = new InMemoryRepository<CprEntity>();
+    cprDocumentFactory = {
+      generateDocument: () =>
+        new Readable({
+          read() {},
+        }),
+    } as unknown as CprDocumentFactory;
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -20,6 +29,7 @@ describe('CprService', () => {
         { provide: CreditorService, useValue: {} },
         { provide: EmitterService, useValue: {} },
         { provide: DeliveryPlaceService, useValue: {} },
+        { provide: 'CPR_DOCUMENT_FACTORY', useValue: cprDocumentFactory },
       ],
     }).compile();
 
