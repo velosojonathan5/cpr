@@ -4,10 +4,7 @@ import { Readable } from 'node:stream';
 import { PMGCprDataModel } from './pmg-cpr-data-model/pmg-cpr-data-model';
 
 export class CprDocumentFactory {
-  constructor(
-    private cprDocumentGenerator: CprDocumentGenerator,
-    // private context: Context,
-  ) {}
+  constructor(private cprDocumentGenerator: CprDocumentGenerator) {}
 
   generateDocument(cpr: CprEntity): Readable {
     // se precisa implementar uma regra pra um cliente especifico

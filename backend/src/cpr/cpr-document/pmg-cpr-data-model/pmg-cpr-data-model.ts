@@ -190,9 +190,7 @@ const sections: SectionTemplate[] = [
 ];
 
 export class PMGCprDataModel {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   generateData(cpr: CprEntity): CprDocument {
-    // implementar aqui logica que gera os dados do documento com as sessões
     const signatories = this.getSignatories(cpr);
     const sections = this.getSections(cpr);
     const headerImagePath = 'src/assets/images/capaPMG.jpg';
