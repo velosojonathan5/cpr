@@ -44,8 +44,6 @@ const mockRegistry = RegistryEntity.create({ number: 'MAT11333' });
 
 const mockFarm = FarmEntity.create({
   name: 'Fazenda Dois Irmãos',
-  cnpj: '67664457000171',
-  legalName: 'Fazenda Dois Irmãos LTDA',
   inscricaoEstadual: '698468468',
   phone: '37999334671',
   email: 'fadois@gmail.com',

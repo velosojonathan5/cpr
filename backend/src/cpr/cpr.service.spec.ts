@@ -179,8 +179,6 @@ const mockRegistry = RegistryEntity.create({ number: 'MAT11333' });
 
 const mockFarm = FarmEntity.create({
   name: 'Fazenda Dois Irmãos',
-  cnpj: '67664457000171',
-  legalName: 'Fazenda Dois Irmãos LTDA',
   inscricaoEstadual: '698468468',
   phone: '37999334671',
   email: 'fadois@gmail.com',
@@ -343,7 +341,7 @@ describe('CprService', () => {
         'Imóvel rural',
       );
       expect(createdCPR.productDevelopmentSite.qualifications[0].content).toBe(
-        'Fazenda Dois Irmãos LTDA',
+        'Fazenda Dois Irmãos',
       );
 
       expect(createdCPR.productDevelopmentSite.qualifications[1].label).toBe(
