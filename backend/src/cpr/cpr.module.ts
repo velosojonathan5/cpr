@@ -8,6 +8,8 @@ import { InMemoryRepository } from '../infra/repository/in-memory/in-memory.repo
 import { CprEntity } from '../entities/cpr/cpr.entity';
 import { EmitterModule } from '../emitter/emitter.module';
 import { DeliveryPlaceModule } from '../delivery-place/delivery-place.module';
+import { PDFKitCprGenerator } from './cpr-document/pdfkit-cpr-generator/pdfkit-cpr-generator';
+import { CprDocumentFactory } from './cpr-document/cpr-document-factory';
 
 @Module({
   controllers: [CprController, CprPhysicController],
@@ -17,6 +19,10 @@ import { DeliveryPlaceModule } from '../delivery-place/delivery-place.module';
     {
       provide: 'KEY_REPOSITORY_CPR',
       useValue: new InMemoryRepository<CprEntity>(),
+    },
+    {
+      provide: 'CPR_DOCUMENT_FACTORY',
+      useValue: new CprDocumentFactory(new PDFKitCprGenerator()),
     },
   ],
   imports: [CreditorModule, EmitterModule, DeliveryPlaceModule],
