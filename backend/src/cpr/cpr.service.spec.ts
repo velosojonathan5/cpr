@@ -29,6 +29,7 @@ import { DeliveryPlaceService } from '../delivery-place/delivery-place.service';
 import { CprDocumentFactory } from './cpr-document/cpr-document-factory';
 import { Readable } from 'node:stream';
 import { CreateCprDto } from './dto/create-cpr.dto';
+import { FileManagerClient } from '../file-manager-client/FileManagerClient';
 
 const mockCprDto: CreateCprDto = {
   creditor: {
@@ -223,6 +224,7 @@ describe('CprService', () => {
   let emitterRepository: CRUDRepository<EmitterEntity>;
   let deliveryPlaceService: DeliveryPlaceService;
   let deliveryPlaceRepository: CRUDRepository<CompanyEntity>;
+  let fileManagerClient: FileManagerClient;
 
   beforeEach(async () => {
     repository = new InMemoryRepository<CprEntity>();
@@ -234,6 +236,8 @@ describe('CprService', () => {
 
     deliveryPlaceRepository = new InMemoryRepository<CompanyEntity>();
     deliveryPlaceService = new DeliveryPlaceService(deliveryPlaceRepository);
+
+    fileManagerClient = { save: jest.fn(), getByKey: jest.fn() };
 
     cprDocumentFactory = {
       generateDocument: () =>
@@ -250,6 +254,7 @@ describe('CprService', () => {
         { provide: EmitterService, useValue: emitterService },
         { provide: DeliveryPlaceService, useValue: deliveryPlaceService },
         { provide: 'CPR_DOCUMENT_FACTORY', useValue: cprDocumentFactory },
+        { provide: 'FILE_MANAGER_CLIENT', useValue: fileManagerClient },
       ],
     }).compile();
 
@@ -282,6 +287,10 @@ describe('CprService', () => {
       const createdCPR = await repository.getById(id);
 
       expect(id).toBeDefined();
+      expect(fileManagerClient.save).toHaveBeenCalledWith(
+        `cpr-documents/${id}.pdf`,
+        expect.any(Readable),
+      );
       expect(createdCPR.number).toBeDefined();
       expect(createdCPR.creditor.cnpj).toBe('88457902000100');
       expect(createdCPR.creditor.name).toBe('Agro Insumos');

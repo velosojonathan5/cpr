@@ -8,6 +8,7 @@ import { EmitterModule } from '../emitter/emitter.module';
 import { DeliveryPlaceModule } from '../delivery-place/delivery-place.module';
 import { PDFKitCprGenerator } from './cpr-document/pdfkit-cpr-generator/pdfkit-cpr-generator';
 import { CprDocumentFactory } from './cpr-document/cpr-document-factory';
+import { S3FileManagerClient } from 'src/file-manager-client/S3-file-manager-client/S3-file-manager-client';
 
 @Module({
   controllers: [CprController],
@@ -20,6 +21,10 @@ import { CprDocumentFactory } from './cpr-document/cpr-document-factory';
     {
       provide: 'CPR_DOCUMENT_FACTORY',
       useValue: new CprDocumentFactory(new PDFKitCprGenerator()),
+    },
+    {
+      provide: 'FILE_MANAGER_CLIENT',
+      useClass: S3FileManagerClient,
     },
   ],
   imports: [CreditorModule, EmitterModule, DeliveryPlaceModule],

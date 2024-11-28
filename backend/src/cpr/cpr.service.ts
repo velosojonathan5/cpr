@@ -13,6 +13,7 @@ import { CompanyEntity } from '../entities/person/company.entity';
 import { AddressEntity } from '../entities/person/address.entity';
 import { CreateCprDto, CreateGuarantorDto } from './dto/create-cpr.dto';
 import { Stream } from 'stream';
+import { FileManagerClient } from '../file-manager-client/FileManagerClient';
 
 @Injectable()
 export class CprService<T extends CprEntity> extends BaseService<CprEntity> {
@@ -21,6 +22,8 @@ export class CprService<T extends CprEntity> extends BaseService<CprEntity> {
     protected readonly cprRepository: CRUDRepository<T>,
     @Inject('CPR_DOCUMENT_FACTORY')
     protected readonly cprDocumentFactory: CprDocumentFactory,
+    @Inject('FILE_MANAGER_CLIENT')
+    protected readonly fileManagerClient: FileManagerClient,
     protected readonly creditorService: CreditorService,
     protected readonly emitterService: EmitterService,
     protected readonly deliveryPlaceService: DeliveryPlaceService,
@@ -79,6 +82,7 @@ export class CprService<T extends CprEntity> extends BaseService<CprEntity> {
     });
 
     const document: Stream = this.cprDocumentFactory.generateDocument(cpr);
+    await this.fileManagerClient.save(`cpr-documents/${cpr.id}.pdf`, document);
 
     // const writeStream = createWriteStream('cpr.pdf');
     // document.pipe(writeStream);
