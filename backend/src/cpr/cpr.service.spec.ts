@@ -28,9 +28,9 @@ import {
 import { DeliveryPlaceService } from '../delivery-place/delivery-place.service';
 import { CprDocumentFactory } from './cpr-document/cpr-document-factory';
 import { Readable } from 'node:stream';
-import { CreateCprPhysicDto } from './cpr-physic/dto/create-cpr-physic.dto';
+import { CreateCprDto } from './dto/create-cpr.dto';
 
-const mockCprDto: CreateCprPhysicDto = {
+const mockCprDto: CreateCprDto = {
   creditor: {
     id: '0190a308-15df-725b-a6f3-4c591248221a',
   },

@@ -80,9 +80,6 @@ export class CprService<T extends CprEntity> extends BaseService<CprEntity> {
 
     const document: Stream = this.cprDocumentFactory.generateDocument(cpr);
 
-    console.log(document);
-    // [chatgpt] crie aqui um código para salvar o document em um bucket
-
     // const writeStream = createWriteStream('cpr.pdf');
     // document.pipe(writeStream);
 
