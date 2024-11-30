@@ -82,7 +82,10 @@ export class CprService<T extends CprEntity> extends BaseService<CprEntity> {
     });
 
     const document: Stream = this.cprDocumentFactory.generateDocument(cpr);
-    await this.fileManagerClient.save(`cpr-documents/${cpr.id}.pdf`, document);
+    await this.fileManagerClient.save(document, {
+      key: `cpr-documents/${cpr.id}.pdf`,
+      contentType: 'application/pdf',
+    });
 
     // const writeStream = createWriteStream('cpr.pdf');
     // document.pipe(writeStream);

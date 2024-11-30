@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import { S3FileManagerClient } from './S3-file-manager-client';
 import { Readable } from 'stream';
 
@@ -5,7 +6,9 @@ describe('S3FileManagerClient', () => {
   let fileManager: S3FileManagerClient;
 
   beforeEach(() => {
-    fileManager = new S3FileManagerClient();
+    fileManager = new S3FileManagerClient({
+      get: () => 'ENV_VAR',
+    } as unknown as ConfigService);
     fileManager['s3Client'].send = jest.fn();
   });
 
@@ -20,7 +23,10 @@ describe('S3FileManagerClient', () => {
       stream.push(fileContent);
       stream.push(null);
 
-      await fileManager.save('key', stream);
+      await fileManager.save(stream, {
+        key: 'key',
+        contentType: 'application/pdf',
+      });
 
       // TODO melherar testes aqui
       expect(fileManager['s3Client'].send).toHaveBeenCalledTimes(1);

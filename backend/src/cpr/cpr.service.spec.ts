@@ -286,8 +286,11 @@ describe('CprService', () => {
 
       expect(id).toBeDefined();
       expect(fileManagerClient.save).toHaveBeenCalledWith(
-        `cpr-documents/${id}.pdf`,
         expect.any(Readable),
+        {
+          key: `cpr-documents/${id}.pdf`,
+          contentType: 'application/pdf',
+        },
       );
       expect(createdCPR.number).toBeDefined();
       expect(createdCPR.creditor.cnpj).toBe('88457902000100');

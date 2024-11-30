@@ -1,6 +1,9 @@
 import { Stream } from 'node:stream';
 
 export interface FileManagerClient {
-  save(key: string, file: Stream): Promise<void>;
+  save(
+    file: Stream,
+    config: { key: string; contentType: string },
+  ): Promise<void>;
   getByKey(key: string): Promise<Stream>;
 }
