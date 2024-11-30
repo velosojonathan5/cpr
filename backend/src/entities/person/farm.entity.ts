@@ -1,7 +1,6 @@
 import { FormatterUtil } from '../../util/formatter.util';
 import { TenantEntity } from '../../infra/entities/tenant.entity';
 import { AddressEntity } from './address.entity';
-import { CompanyEntity } from './company.entity';
 import { IndividualEntity } from './individual.entity';
 
 export class RegistryEntity extends TenantEntity {
@@ -110,7 +109,10 @@ export class RentRegistry extends RegistryEntity {
   }
 }
 
-export class FarmEntity extends CompanyEntity {
+export class FarmEntity extends TenantEntity {
+  name: string;
+  inscricaoEstadual: string;
+  address: AddressEntity;
   tatalArea: number;
   cultivatedArea: number;
   nirf: string;
@@ -138,7 +140,7 @@ export class FarmEntity extends CompanyEntity {
     let qualifications = [
       {
         label: 'Imóvel rural',
-        content: this.legalName,
+        content: this.name,
       },
       {
         label: 'Inscrição Estadual',
@@ -177,8 +179,6 @@ export class FarmEntity extends CompanyEntity {
 
   static create(obj: {
     name: string;
-    cnpj: string;
-    legalName: string;
     inscricaoEstadual: string;
     phone: string;
     email: string;
@@ -190,11 +190,26 @@ export class FarmEntity extends CompanyEntity {
     possession: PossessionEnum;
     registry: RegistryEntity;
   }): FarmEntity {
-    const company = CompanyEntity.create(obj);
-
-    const { tatalArea, cultivatedArea, nirf, possession, registry } = obj;
+    const {
+      name,
+      inscricaoEstadual,
+      phone,
+      email,
+      address,
+      legalRepresentative,
+      tatalArea,
+      cultivatedArea,
+      nirf,
+      possession,
+      registry,
+    } = obj;
     return Object.assign(new FarmEntity(), {
-      ...company,
+      name,
+      inscricaoEstadual,
+      phone,
+      email,
+      address,
+      legalRepresentative,
       tatalArea,
       cultivatedArea,
       nirf,
