@@ -12,22 +12,10 @@ import { AddressEntity } from '../entities/person/address.entity';
 import {
   FarmEntity,
   PossessionEnum,
-  RegistryEntity,
+  RegistryEntity,RentRegistry
 } from '../entities/person/farm.entity';
 import { StateEnum } from '../infra/entities/state-enum';
 
-const mockIndividual = IndividualEntity.create({
-  name: 'Galileo di Vincenzo Bonaulti de Galilei',
-  phone: '37999888484',
-  email: 'galileo@cientist.com',
-  address: {} as unknown as AddressEntity,
-  cpf: '54289266002',
-  gender: GenderEnum.MALE,
-  RG: 'MG574475',
-  RGEmitedBy: 'SSP/SP',
-  RGEmitedDate: new Date('2024-07-13T18:49:18.111Z'),
-  maritalStatus: MaritalStatusEnum.SINGLE,
-});
 
 const mockAddress = AddressEntity.create({
   postalCode: '35585000',
@@ -40,7 +28,39 @@ const mockAddress = AddressEntity.create({
   mailbox: '1234',
 });
 
-const mockRegistry = RegistryEntity.create({ number: 'MAT11333' });
+const mockIndividual = IndividualEntity.create({
+  name: 'Galileo di Vincenzo Bonaulti de Galilei',
+  phone: '37999888484',
+  email: 'galileo@cientist.com',
+  address: mockAddress,
+  cpf: '54289266002',
+  gender: GenderEnum.MALE,
+  RG: 'MG574475',
+  RGEmitedBy: 'SSP/SP',
+  RGEmitedDate: new Date('2024-07-13T18:49:18.111Z'),
+  maritalStatus: MaritalStatusEnum.SINGLE,
+});
+
+const mockRegistry = RegistryEntity.create({ 
+  number: 'PROP11333',
+  regitryPlaceName: 'Cartório da comarca',
+  address: mockAddress,
+  book: 'Livro BH',
+  sheet: 'Folha 145',
+  regitryDate: new Date('2024-07-13T18:49:18.111Z')
+});
+
+const mockRentRegistry = RentRegistry.create({ 
+  number: 'ARRED11333',
+  initialDate: new Date('2024-07-13T18:49:18.111Z'),
+  finalDate: new Date('2024-07-13T18:49:18.111Z'),
+  regitryPlaceName: 'Cartório da comarca',
+  address: mockAddress,
+  book: 'Livro BH',
+  sheet: 'Folha 145',
+  regitryDate: new Date('2024-07-13T18:49:18.111Z')
+});
+
 
 const mockFarm = FarmEntity.create({
   name: 'Fazenda Dois Irmãos',
@@ -54,8 +74,8 @@ const mockFarm = FarmEntity.create({
   tatalArea: 200,
   cultivatedArea: 1000,
   nirf: 'NIRF7700',
-  possession: PossessionEnum.OWNER,
-  registry: mockRegistry,
+  possession: PossessionEnum.RENT,
+  registry: mockRentRegistry,
 });
 
 mockFarm.id = '0190c91f-6a4f-7bc8-8cca-ae6633e25c40';
