@@ -13,7 +13,7 @@ import { CompanyEntity } from '../entities/person/company.entity';
 import { AddressEntity } from '../entities/person/address.entity';
 import { CreateCprDto, CreateGuarantorDto } from './dto/create-cpr.dto';
 import { Stream } from 'stream';
-import { FileManagerClient } from '../file-manager-client/FileManagerClient';
+import { FileManagerClient } from '../file-manager-client/file-manager-client';
 
 @Injectable()
 export class CprService<T extends CprEntity> extends BaseService<CprEntity> {
@@ -86,9 +86,6 @@ export class CprService<T extends CprEntity> extends BaseService<CprEntity> {
       key: `cpr-documents/${cpr.id}.pdf`,
       contentType: 'application/pdf',
     });
-
-    // const writeStream = createWriteStream('cpr.pdf');
-    // document.pipe(writeStream);
 
     super.save(cpr);
 

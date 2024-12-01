@@ -29,7 +29,7 @@ import { DeliveryPlaceService } from '../delivery-place/delivery-place.service';
 import { CprDocumentFactory } from './cpr-document/cpr-document-factory';
 import { Readable } from 'node:stream';
 import { CreateCprDto } from './dto/create-cpr.dto';
-import { FileManagerClient } from '../file-manager-client/FileManagerClient';
+import { FileManagerClient } from '../file-manager-client/file-manager-client';
 
 const mockCprDto: CreateCprDto = {
   creditor: {

@@ -4,8 +4,8 @@ import {
   PutObjectCommand,
   GetObjectCommand,
 } from '@aws-sdk/client-s3';
-import { Stream } from 'stream';
-import { FileManagerClient } from '../FileManagerClient';
+import { Stream } from 'node:stream';
+import { FileManagerClient } from '../file-manager-client';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()

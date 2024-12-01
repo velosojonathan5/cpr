@@ -8,7 +8,9 @@ import { EmitterModule } from '../emitter/emitter.module';
 import { DeliveryPlaceModule } from '../delivery-place/delivery-place.module';
 import { PDFKitCprGenerator } from './cpr-document/pdfkit-cpr-generator/pdfkit-cpr-generator';
 import { CprDocumentFactory } from './cpr-document/cpr-document-factory';
-import { S3FileManagerClient } from 'src/file-manager-client/S3-file-manager-client/S3-file-manager-client';
+import { S3FileManagerClient } from '../file-manager-client/S3-file-manager-client/S3-file-manager-client';
+import { ConfigService } from '@nestjs/config';
+import { LocalFileManagerClient } from '../file-manager-client/local-file-manager-client/local-file-manager-client';
 
 @Module({
   controllers: [CprController],
@@ -25,6 +27,18 @@ import { S3FileManagerClient } from 'src/file-manager-client/S3-file-manager-cli
     {
       provide: 'FILE_MANAGER_CLIENT',
       useClass: S3FileManagerClient,
+    },
+    {
+      provide: 'FILE_MANAGER_CLIENT',
+      useFactory: (configService: ConfigService) => {
+        const env = configService.get<string>('NODE_ENV');
+
+        if (env === 'development') {
+          return new LocalFileManagerClient('files');
+        }
+        return new S3FileManagerClient(configService);
+      },
+      inject: [ConfigService],
     },
   ],
   imports: [CreditorModule, EmitterModule, DeliveryPlaceModule],
