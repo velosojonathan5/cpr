@@ -213,7 +213,7 @@ const mockDeliveryPlace = CompanyEntity.create({
 });
 
 describe('CprService', () => {
-  let service: CprService<CprEntity>;
+  let service: CprService;
   let repository: InMemoryRepository<CprEntity>;
   let cprDocumentFactory: CprDocumentFactory;
   let creditorService: CreditorService;
@@ -235,7 +235,11 @@ describe('CprService', () => {
     deliveryPlaceRepository = new InMemoryRepository<CompanyEntity>();
     deliveryPlaceService = new DeliveryPlaceService(deliveryPlaceRepository);
 
-    fileManagerClient = { save: jest.fn(), getByKey: jest.fn() };
+    fileManagerClient = {
+      save: jest.fn(),
+      getByKey: jest.fn(),
+      getSignedUrl: jest.fn(),
+    };
 
     cprDocumentFactory = {
       generateDocument: () =>
@@ -256,25 +260,39 @@ describe('CprService', () => {
       ],
     }).compile();
 
-    service = module.get<CprService<CprEntity>>(CprService);
+    service = module.get<CprService>(CprService);
+
+    creditorRepository.insert(mockCreditor);
+    mockCprDto.creditor.id = mockCreditor.id;
+
+    emitterRepository.insert(mockEmitter);
+    mockCprDto.emitter.id = mockEmitter.id;
+    mockCprDto.productDevelopmentSite.id = mockFarm.id;
+
+    deliveryPlaceRepository.insert(mockDeliveryPlace);
+    mockCprDto.deliveryPlace.id = mockDeliveryPlace.id;
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
+  describe('test method getById', () => {
+    it('should get a cpr by id and return it', async () => {
+      fileManagerClient.getSignedUrl = jest
+        .fn()
+        .mockResolvedValue('http://signed.url');
+
+      const { id } = await service.create(mockCprDto);
+
+      const cpr = await service.getById(id);
+
+      expect(cpr.signedUrl).toBe('http://signed.url');
+    });
+  });
+
   describe('test method create', () => {
     it('should create a physc CPR when emitter is an individual', async () => {
-      creditorRepository.insert(mockCreditor);
-      mockCprDto.creditor.id = mockCreditor.id;
-
-      emitterRepository.insert(mockEmitter);
-      mockCprDto.emitter.id = mockEmitter.id;
-      mockCprDto.productDevelopmentSite.id = mockFarm.id;
-
-      deliveryPlaceRepository.insert(mockDeliveryPlace);
-      mockCprDto.deliveryPlace.id = mockDeliveryPlace.id;
-
       const specificDate = new Date('2023-07-22T10:20:30Z');
 
       jest.useFakeTimers();

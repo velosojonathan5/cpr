@@ -14,6 +14,16 @@ class LocalFileManagerClient implements FileManagerClient {
     }
   }
 
+  getSignedUrl(key: string): Promise<string> {
+    const filePath = path.join(this.storageDirectory, key);
+
+    if (!fs.existsSync(filePath)) {
+      return Promise.reject(new Error(`File with key "${key}" not found`));
+    }
+
+    return Promise.resolve(filePath);
+  }
+
   async save(
     file: Stream,
     config: { key: string; contentType: string },

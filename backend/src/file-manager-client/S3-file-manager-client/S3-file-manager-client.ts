@@ -7,6 +7,7 @@ import {
 import { Stream } from 'node:stream';
 import { FileManagerClient } from '../file-manager-client';
 import { ConfigService } from '@nestjs/config';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 @Injectable()
 export class S3FileManagerClient implements FileManagerClient {
@@ -19,6 +20,18 @@ export class S3FileManagerClient implements FileManagerClient {
     const region = this.configService.get<string>('S3_REGION');
 
     this.s3Client = new S3Client({ region });
+  }
+
+  async getSignedUrl(key: string): Promise<string> {
+    const command = new GetObjectCommand({
+      Bucket: this.bucket,
+      Key: key,
+    });
+
+    const expiresIn =
+      this.configService.get<number>('S3_SIGNED_URL_EXPIRES_IN') || 3600; // Tempo padrão: 1 hora
+
+    return getSignedUrl(this.s3Client, command, { expiresIn });
   }
 
   async save(
