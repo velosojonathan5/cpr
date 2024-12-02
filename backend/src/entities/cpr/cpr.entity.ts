@@ -52,6 +52,7 @@ export class CprEntity extends TenantEntity {
   value: number;
   issueDate: Date;
   responsibleForExpenses: ResponsibleForExpensesEnum;
+  signedUrl?: string;
 
   get sacas(): number {
     return this.quantity / 60;

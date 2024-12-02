@@ -13,13 +13,13 @@ import { CompanyEntity } from '../entities/person/company.entity';
 import { AddressEntity } from '../entities/person/address.entity';
 import { CreateCprDto, CreateGuarantorDto } from './dto/create-cpr.dto';
 import { Stream } from 'stream';
-import { FileManagerClient } from '../file-manager-client/FileManagerClient';
+import { FileManagerClient } from '../file-manager-client/file-manager-client';
 
 @Injectable()
-export class CprService<T extends CprEntity> extends BaseService<CprEntity> {
+export class CprService extends BaseService<CprEntity> {
   constructor(
     @Inject('KEY_REPOSITORY_CPR')
-    protected readonly cprRepository: CRUDRepository<T>,
+    protected readonly cprRepository: CRUDRepository<CprEntity>,
     @Inject('CPR_DOCUMENT_FACTORY')
     protected readonly cprDocumentFactory: CprDocumentFactory,
     @Inject('FILE_MANAGER_CLIENT')
@@ -29,6 +29,16 @@ export class CprService<T extends CprEntity> extends BaseService<CprEntity> {
     protected readonly deliveryPlaceService: DeliveryPlaceService,
   ) {
     super(cprRepository);
+  }
+
+  async getById(id: string): Promise<CprEntity> {
+    const cpr = await super.getById(id);
+
+    cpr.signedUrl = await this.fileManagerClient.getSignedUrl(
+      `cpr-documents/${cpr.id}.pdf`,
+    );
+
+    return cpr;
   }
 
   async create(createCprDto: CreateCprDto): Promise<{ id: string }> {
@@ -82,10 +92,10 @@ export class CprService<T extends CprEntity> extends BaseService<CprEntity> {
     });
 
     const document: Stream = this.cprDocumentFactory.generateDocument(cpr);
-    await this.fileManagerClient.save(`cpr-documents/${cpr.id}.pdf`, document);
-
-    // const writeStream = createWriteStream('cpr.pdf');
-    // document.pipe(writeStream);
+    await this.fileManagerClient.save(document, {
+      key: `cpr-documents/${cpr.id}.pdf`,
+      contentType: 'application/pdf',
+    });
 
     super.save(cpr);
 
