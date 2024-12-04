@@ -3,13 +3,19 @@ import { TenantEntity } from '../../infra/entities/tenant.entity';
 import { AddressEntity } from './address.entity';
 import { IndividualEntity } from './individual.entity';
 
-export class RegistryEntity extends TenantEntity {
+export enum TypeOfPossessionEnum {
+  FULL = 'FULL',
+  DIRECT = 'DIRECT',
+  INDIRECT = 'INDIRECT',
+}
+export class SiteRegistry {
   number: string;
   regitryPlaceName?: string;
   address?: AddressEntity;
   book?: string;
   sheet?: string;
   regitryDate?: Date;
+  typeOfPossessionEnum?: TypeOfPossessionEnum;
 
   private get regitryDateFormatted(): string {
     if (this.regitryDate) {
@@ -18,9 +24,7 @@ export class RegistryEntity extends TenantEntity {
     return '';
   }
 
-  protected constructor() {
-    super();
-  }
+  protected constructor() {}
 
   get qualifications(): { label: string; content: string }[] {
     const qualifications = [
@@ -54,14 +58,15 @@ export class RegistryEntity extends TenantEntity {
     return qualifications;
   }
 
-  static create(obj: Partial<RegistryEntity>) {
-    return Object.assign(new RegistryEntity(), {
+  static create(obj: Partial<SiteRegistry>) {
+    return Object.assign(new SiteRegistry(), {
       number: obj.number,
       regitryPlaceName: obj.regitryPlaceName,
       address: obj.address,
       book: obj.book,
       sheet: obj.sheet,
       regitryDate: obj.regitryDate,
+      typeOfPossessionEnum: obj.typeOfPossessionEnum,
     });
   }
 }
@@ -76,7 +81,7 @@ const POSSESSION_MAP = {
   [PossessionEnum.RENT]: 'Arrendatário',
 };
 
-export class RentRegistry extends RegistryEntity {
+export class RentRegistry extends SiteRegistry {
   initialDate: Date;
   finalDate: Date;
 
@@ -93,7 +98,7 @@ export class RentRegistry extends RegistryEntity {
   }
 
   static create(obj: Partial<RentRegistry>) {
-    const registry = RegistryEntity.create(obj);
+    const registry = RentRegistry.create(obj);
 
     return Object.assign(new RentRegistry(), {
       ...registry,
@@ -128,7 +133,7 @@ export class FarmEntity extends TenantEntity {
   cultivatedArea: number;
   nirf: string;
   possession: PossessionEnum;
-  registry: RegistryEntity;
+  siteRegistry?: SiteRegistry;
   rentRegistry?: RentRegistry;
 
   get isRent(): boolean {
@@ -179,7 +184,7 @@ export class FarmEntity extends TenantEntity {
       },
     ];
 
-    qualifications = qualifications.concat(this.registry.qualifications);
+    qualifications = qualifications.concat(this.siteRegistry.qualifications);
 
     if (this.isRent) {
       qualifications = qualifications.concat(this.rentRegistry.qualifications);
@@ -199,7 +204,8 @@ export class FarmEntity extends TenantEntity {
     cultivatedArea: number;
     nirf: string;
     possession: PossessionEnum;
-    registry: RegistryEntity;
+    siteRegistry?: SiteRegistry;
+    rentRegistry?: RentRegistry;
   }): FarmEntity {
     const {
       name,
@@ -212,9 +218,10 @@ export class FarmEntity extends TenantEntity {
       cultivatedArea,
       nirf,
       possession,
-      registry,
+      siteRegistry,
+      rentRegistry,
     } = obj;
-    return Object.assign(new FarmEntity(), {
+    const farm = Object.assign(new FarmEntity(), {
       name,
       inscricaoEstadual,
       phone,
@@ -225,7 +232,16 @@ export class FarmEntity extends TenantEntity {
       cultivatedArea,
       nirf,
       possession,
-      registry,
     });
+
+    if (farm.possession === PossessionEnum.OWNER) {
+      // TODO throw error if siteRegistry doesn't exists
+      farm.siteRegistry = siteRegistry;
+    } else if (farm.possession === PossessionEnum.RENT) {
+      // TODO throw error if rentRegistry doesn't exists
+      farm.rentRegistry = rentRegistry;
+    }
+
+    return farm;
   }
 }

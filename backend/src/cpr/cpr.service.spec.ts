@@ -25,7 +25,7 @@ import { ProductKeyEnum } from '../entities/product.entity';
 import {
   FarmEntity,
   PossessionEnum,
-  RegistryEntity,
+  SiteRegistry,
 } from '../entities/person/farm.entity';
 import { DeliveryPlaceService } from '../delivery-place/delivery-place.service';
 import { CprDocumentFactory } from './cpr-document/cpr-document-factory';
@@ -160,7 +160,7 @@ const mockCompany = CompanyEntity.create({
   legalRepresentative: mockLegalRepresentative,
 });
 
-const mockRegistry = RegistryEntity.create({ number: 'MAT11333' });
+const mockRegistry = SiteRegistry.create({ number: 'MAT11333' });
 
 const mockFarm = FarmEntity.create({
   name: 'Fazenda Dois Irmãos',
@@ -173,7 +173,7 @@ const mockFarm = FarmEntity.create({
   cultivatedArea: 1000,
   nirf: 'NIRF7700',
   possession: PossessionEnum.OWNER,
-  registry: mockRegistry,
+  siteRegistry: mockRegistry,
 });
 
 const mockEmitter = EmitterEntity.create(mockIndividual, [mockFarm]);

@@ -11,19 +11,14 @@ import { EmitterService } from './emitter.service';
 import { CreateEmitterDto } from './dto/create-emitter.dto';
 import { UpdateEmitterDto } from './dto/update-emitter.dto';
 import { ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { TypeOfPossessionEnum } from '../entities/person/farm.entity';
 
 class CreateAddressDto {
   @ApiProperty()
   postalCode: string;
 }
 
-enum TypeOfPossessionEnum {
-  FULL = 'FULL',
-  DIRECT = 'DIRECT',
-  INDIRECT = 'INDIRECT',
-}
-
-class SiteRegistry {
+class SiteRegistryDto {
   @ApiProperty()
   registryNumber: string;
 
@@ -57,7 +52,7 @@ class DevelopmentSiteDto {
   address: CreateAddressDto;
 
   @ApiProperty()
-  siteRegistry: SiteRegistry;
+  siteRegistry: SiteRegistryDto;
 }
 
 class FarmDto extends DevelopmentSiteDto {

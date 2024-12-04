@@ -13,7 +13,7 @@ import { AddressEntity } from '../entities/person/address.entity';
 import {
   FarmEntity,
   PossessionEnum,
-  RegistryEntity,
+  SiteRegistry,
 } from '../entities/person/farm.entity';
 import { StateEnum } from '../infra/entities/state-enum';
 
@@ -45,7 +45,7 @@ const mockAddress = AddressEntity.create({
   mailbox: '1234',
 });
 
-const mockRegistry = RegistryEntity.create({ number: 'MAT11333' });
+const mockRegistry = SiteRegistry.create({ number: 'MAT11333' });
 
 const mockFarm = FarmEntity.create({
   name: 'Fazenda Dois Irmãos',
@@ -58,7 +58,7 @@ const mockFarm = FarmEntity.create({
   cultivatedArea: 1000,
   nirf: 'NIRF7700',
   possession: PossessionEnum.OWNER,
-  registry: mockRegistry,
+  siteRegistry: mockRegistry,
 });
 
 mockFarm.id = '0190c91f-6a4f-7bc8-8cca-ae6633e25c40';
