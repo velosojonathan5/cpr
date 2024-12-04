@@ -23,24 +23,35 @@ export class RegistryEntity extends TenantEntity {
   }
 
   get qualifications(): { label: string; content: string }[] {
-    return [
+    const qualifications = [
       {
         label: 'Número da matrícula',
         content: this.number,
       },
-      {
+    ];
+
+    if (this.regitryPlaceName && this.address) {
+      qualifications.push({
         label: 'Cartório de registro da matrícula',
         content: `${this.regitryPlaceName}, ${this.address ? this.address.city : ''}/${this.address ? this.address.state : ''}`,
-      },
-      {
+      });
+    }
+
+    if (this.book && this.sheet) {
+      qualifications.push({
         label: 'Livro e folha de registro da matrícula',
         content: `Livro ${this.book} na folha ${this.sheet}`,
-      },
-      {
+      });
+    }
+
+    if (this.regitryDate) {
+      qualifications.push({
         label: 'Data de registro da matrícula',
         content: this.regitryDateFormatted,
-      },
-    ];
+      });
+    }
+
+    return qualifications;
   }
 
   static create(obj: Partial<RegistryEntity>) {

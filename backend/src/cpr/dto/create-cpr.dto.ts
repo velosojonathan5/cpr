@@ -51,8 +51,9 @@ class CreateAddressDto {
   publicArea: string;
 
   @ApiProperty()
+  @IsOptional()
   @IsString()
-  number: string;
+  number?: string;
 
   @ApiProperty()
   @IsOptional()

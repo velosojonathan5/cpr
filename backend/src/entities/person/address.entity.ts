@@ -7,7 +7,7 @@ export class AddressEntity extends TenantEntity {
   city: string;
   state: StateEnum;
   publicArea: string;
-  number: string;
+  number?: string;
   complement?: string;
   district: string;
   mailbox?: string;
@@ -17,11 +17,11 @@ export class AddressEntity extends TenantEntity {
   }
 
   get qualification(): string {
+    const number = this.number ? `, nº ${this.number}` : ', Sem número';
     const complementText = this.complement ? `, ${this.complement}` : '';
     const mailboxText = this.mailbox ? `, (${this.mailbox})` : '';
 
-    return `${this.city}/${this.state}, à ${this.publicArea}, nº
-      ${this.number}${complementText}${mailboxText} - Bairro: ${this.district}, CEP: ${FormatterUtil.formatPostalCode(this.postalCode)}`;
+    return `${this.city}/${this.state}, à ${this.publicArea}${number}${complementText}${mailboxText} - Bairro: ${this.district}, CEP: ${FormatterUtil.formatPostalCode(this.postalCode)}`;
   }
 
   static create(obj: {
@@ -29,7 +29,7 @@ export class AddressEntity extends TenantEntity {
     city: string;
     state: string;
     publicArea: string;
-    number: string;
+    number?: string;
     complement?: string;
     district: string;
     mailbox?: string;

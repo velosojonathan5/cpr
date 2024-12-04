@@ -9,6 +9,7 @@ import {
   GenderEnum,
   IndividualEntity,
   MaritalStatusEnum,
+  Rg,
 } from '../entities/person/individual.entity';
 
 const mockAddress = AddressEntity.create({
@@ -28,11 +29,7 @@ const mockLegalRepresentative = IndividualEntity.create({
   name: 'Antônio Alvarenga Silva',
   phone: '37999332222',
   email: 'antonio@pmginsumos.com',
-  rg: {
-    number: 'MG111',
-    emitedBy: 'SSP/MG',
-    emitedDate: new Date('2024-07-13T18:49:18.111Z'),
-  },
+  rg: new Rg('MG111', 'SSP/MG', new Date('2024-07-13T18:49:18.111Z')),
   maritalStatus: MaritalStatusEnum.SINGLE,
 });
 

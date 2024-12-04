@@ -7,6 +7,7 @@ import {
   GenderEnum,
   IndividualEntity,
   MaritalStatusEnum,
+  Rg,
 } from '../entities/person/individual.entity';
 import { AddressEntity } from '../entities/person/address.entity';
 import {
@@ -20,14 +21,16 @@ const mockIndividual = IndividualEntity.create({
   name: 'Galileo di Vincenzo Bonaulti de Galilei',
   phone: '37999888484',
   email: 'galileo@cientist.com',
-  address: {} as unknown as AddressEntity,
+  address: AddressEntity.create({
+    postalCode: '30325310',
+    city: 'Araguari',
+    state: 'SP',
+    publicArea: 'Rua Carlos Henrique',
+    district: 'Centro',
+  }),
   cpf: '54289266002',
   gender: GenderEnum.MALE,
-  rg: {
-    number: 'MG574475',
-    emitedBy: 'SSP/SP',
-    emitedDate: new Date('2024-07-13T18:49:18.111Z'),
-  },
+  rg: new Rg('MG574475', 'SSP/SP', new Date('2024-07-13T18:49:18.111Z')),
   maritalStatus: MaritalStatusEnum.SINGLE,
 });
 
