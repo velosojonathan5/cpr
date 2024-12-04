@@ -131,9 +131,10 @@ export class CreateGuarantorDto extends CreatePersonDto {
   @IsEnum(GenderEnum)
   gender: GenderEnum;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @ValidateNested()
-  rg: RgDto;
+  rg?: RgDto;
 
   @ApiProperty({ enum: MaritalStatusEnum })
   @IsOptional()
