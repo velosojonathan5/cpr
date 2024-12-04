@@ -4,7 +4,7 @@
 
 - [x] **Criação de CPR** com persistência in-memory.
 - [ ] Finalizar **geração do documento da CPR**.
-- [ ] Adicionar **persistência nos arquivos da aplicação** (S3, GCP Buckets).
+- [x] Adicionar **persistência nos arquivos da aplicação** (S3, GCP Buckets).
 - [ ] Adicionar **persistência dos dados da aplicação** (banco de dados).
 - [ ] Implementar **autenticação** (ex: Cognito ou outra solução).
 - [ ] Adicionar suporte a **multi-tenant** (lógica de organizações).

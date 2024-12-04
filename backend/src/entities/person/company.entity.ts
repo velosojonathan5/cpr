@@ -1,13 +1,22 @@
 import { FormatterUtil } from '../../util/formatter.util';
 import { AddressEntity } from './address.entity';
-import { IndividualEntity } from './individual.entity';
 import { PersonEntity } from './person.entity';
+
+export class LegalRepresentative {
+  name: string;
+  cpf: string;
+
+  constructor(name: string, cpf: string) {
+    this.name = name;
+    this.cpf = cpf;
+  }
+}
 
 export class CompanyEntity extends PersonEntity {
   cnpj: string;
   legalName: string;
   inscricaoEstadual: string;
-  legalRepresentative?: IndividualEntity;
+  legalRepresentative?: LegalRepresentative;
 
   protected constructor() {
     super();
@@ -33,7 +42,7 @@ export class CompanyEntity extends PersonEntity {
     phone: string;
     email: string;
     address: AddressEntity;
-    legalRepresentative?: IndividualEntity;
+    legalRepresentative?: LegalRepresentative;
   }): CompanyEntity {
     const {
       name,

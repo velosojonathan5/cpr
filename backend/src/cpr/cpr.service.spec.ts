@@ -20,7 +20,10 @@ import {
 import { StateEnum } from '../infra/entities/state-enum';
 import { EmitterService } from '../emitter/emitter.service';
 import { EmitterEntity } from '../entities/person/emitter.entity';
-import { CompanyEntity } from '../entities/person/company.entity';
+import {
+  CompanyEntity,
+  LegalRepresentative,
+} from '../entities/person/company.entity';
 import { ProductKeyEnum } from '../entities/product.entity';
 import {
   FarmEntity,
@@ -108,15 +111,10 @@ const mockAddress = AddressEntity.create({
   mailbox: '1234',
 });
 
-const mockLegalRepresentative = IndividualEntity.create({
-  cpf: '13527694099',
-  gender: GenderEnum.MALE,
-  name: 'Antônio Alvarenga Silva',
-  phone: '37999332222',
-  email: 'antonio@pmginsumos.com',
-  rg: new Rg('MG111', 'SSP/MG', new Date('2024-07-13T18:49:18.111Z')),
-  maritalStatus: MaritalStatusEnum.SINGLE,
-});
+const mockLegalRepresentative = new LegalRepresentative(
+  'Antônio Alvarenga Silva',
+  '13527694099',
+);
 
 const mockCreditor = CreditorEntity.create({
   name: 'Agro Insumos',
@@ -477,28 +475,7 @@ describe('CprService', () => {
         inscricaoEstadual: '2222222',
         legalRepresentative: {
           name: 'Paula Toller',
-          phone: '31999880000',
-          email: 'paula.toller@gmail.com',
           cpf: '13527694099',
-          gender: GenderEnum.FEMALE,
-          rg: {
-            number: 'MG22222',
-            emitedBy: 'SSP/MG',
-            emitedDate: new Date('2024-01-14T18:49:18.111Z'),
-          },
-          maritalStatus: MaritalStatusEnum.SINGLE,
-          address: {
-            postalCode: '30310-330',
-            city: 'Belo Horizonte',
-            state: StateEnum.MG,
-            publicArea: 'Rua Albita',
-            number: '820',
-            district: 'string',
-          },
-          spouse: undefined,
-          cnpj: undefined,
-          legalName: undefined,
-          inscricaoEstadual: undefined,
         },
       };
 

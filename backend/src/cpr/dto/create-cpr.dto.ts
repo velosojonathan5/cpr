@@ -118,6 +118,16 @@ class CreateGuarantorSpouseDto {
   rg?: RgDto;
 }
 
+class LegalRepresentativeDto {
+  @ApiProperty()
+  @IsString()
+  name: string;
+
+  @ApiProperty()
+  @IsString()
+  cpf: string;
+}
+
 // TODO condicionar obrigatoriede dos campos conforme tipo, se fo pessoa física ou juridica
 export class CreateGuarantorDto extends CreatePersonDto {
   // TODO adicionar validação de CPF
@@ -167,7 +177,7 @@ export class CreateGuarantorDto extends CreatePersonDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
-  legalRepresentative?: CreateGuarantorDto;
+  legalRepresentative?: LegalRepresentativeDto;
 }
 
 enum CropEnum {

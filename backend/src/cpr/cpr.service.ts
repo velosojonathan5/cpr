@@ -13,7 +13,10 @@ import {
   Rg,
   SpouseEntity,
 } from '../entities/person/individual.entity';
-import { CompanyEntity } from '../entities/person/company.entity';
+import {
+  CompanyEntity,
+  LegalRepresentative,
+} from '../entities/person/company.entity';
 import { AddressEntity } from '../entities/person/address.entity';
 import { CreateCprDto, CreateGuarantorDto } from './dto/create-cpr.dto';
 import { Stream } from 'stream';
@@ -150,21 +153,13 @@ export class CprService extends BaseService<CprEntity> {
     } else if (createGuarantorDto.cnpj) {
       const address = AddressEntity.create(createGuarantorDto.address);
 
-      const legalRepresentative = IndividualEntity.create({
-        ...createGuarantorDto.legalRepresentative,
-        rg: new Rg(
-          createGuarantorDto.legalRepresentative.rg.number,
-          createGuarantorDto.legalRepresentative.rg.emitedBy,
-          new Date(createGuarantorDto.legalRepresentative.rg.emitedDate),
-        ),
-        spouse: undefined,
-        address: undefined,
-      });
-
       company = CompanyEntity.create({
         ...createGuarantorDto,
         address,
-        legalRepresentative,
+        legalRepresentative: new LegalRepresentative(
+          createGuarantorDto.legalRepresentative.name,
+          createGuarantorDto.legalRepresentative.cpf,
+        ),
       });
     }
     return GuarantorEntity.create(individual || company);
