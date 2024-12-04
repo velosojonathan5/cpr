@@ -23,9 +23,11 @@ const mockIndividual = IndividualEntity.create({
   address: {} as unknown as AddressEntity,
   cpf: '54289266002',
   gender: GenderEnum.MALE,
-  RG: 'MG574475',
-  RGEmitedBy: 'SSP/SP',
-  RGEmitedDate: new Date('2024-07-13T18:49:18.111Z'),
+  rg: {
+    number: 'MG574475',
+    emitedBy: 'SSP/SP',
+    emitedDate: new Date('2024-07-13T18:49:18.111Z'),
+  },
   maritalStatus: MaritalStatusEnum.SINGLE,
 });
 

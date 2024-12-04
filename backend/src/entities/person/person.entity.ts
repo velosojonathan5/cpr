@@ -3,8 +3,8 @@ import { AddressEntity } from './address.entity';
 
 export abstract class PersonEntity extends TenantEntity {
   name: string;
-  phone: string;
-  email: string;
+  phone?: string;
+  email?: string;
   address?: AddressEntity;
 
   protected constructor(id?: string) {

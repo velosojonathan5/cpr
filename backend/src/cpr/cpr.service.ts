@@ -8,7 +8,11 @@ import { DeliveryPlaceService } from '../delivery-place/delivery-place.service';
 import { CprDocumentFactory } from './cpr-document/cpr-document-factory';
 import { GuarantorEntity } from '../entities/person/guarantor.entity';
 import { ProductEntity } from '../entities/product.entity';
-import { IndividualEntity } from '../entities/person/individual.entity';
+import {
+  IndividualEntity,
+  Rg,
+  SpouseEntity,
+} from '../entities/person/individual.entity';
 import { CompanyEntity } from '../entities/person/company.entity';
 import { AddressEntity } from '../entities/person/address.entity';
 import { CreateCprDto, CreateGuarantorDto } from './dto/create-cpr.dto';
@@ -109,32 +113,54 @@ export class CprService extends BaseService<CprEntity> {
     let company: CompanyEntity;
 
     if (createGuarantorDto.cpf) {
-      let spouseData: IndividualEntity | undefined;
+      let spouseData: SpouseEntity | undefined;
 
       if (createGuarantorDto.spouse) {
         const { spouse } = createGuarantorDto;
 
-        spouseData = IndividualEntity.create({
-          ...spouse,
-          spouse: undefined,
-          address: undefined,
+        let rg: Rg;
+        if (spouse.rg) {
+          rg = new Rg(
+            spouse.rg.number,
+            spouse.rg.emitedBy,
+            new Date(spouse.rg.emitedDate),
+          );
+        }
+
+        spouseData = SpouseEntity.create({
+          name: spouse.name,
+          cpf: spouse.cpf,
+          rg: rg,
         });
       }
 
       const address = AddressEntity.create(createGuarantorDto.address);
+      const rg = new Rg(
+        createGuarantorDto.rg.number,
+        createGuarantorDto.rg.emitedBy,
+        new Date(createGuarantorDto.rg.emitedDate),
+      );
 
       individual = IndividualEntity.create({
         ...createGuarantorDto,
         spouse: spouseData,
         address,
+        rg,
       });
     } else if (createGuarantorDto.cnpj) {
       const address = AddressEntity.create(createGuarantorDto.address);
+
       const legalRepresentative = IndividualEntity.create({
         ...createGuarantorDto.legalRepresentative,
+        rg: new Rg(
+          createGuarantorDto.legalRepresentative.rg.number,
+          createGuarantorDto.legalRepresentative.rg.emitedBy,
+          new Date(createGuarantorDto.legalRepresentative.rg.emitedDate),
+        ),
         spouse: undefined,
         address: undefined,
       });
+
       company = CompanyEntity.create({
         ...createGuarantorDto,
         address,

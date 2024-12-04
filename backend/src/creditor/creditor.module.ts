@@ -28,9 +28,11 @@ const mockLegalRepresentative = IndividualEntity.create({
   name: 'Antônio Alvarenga Silva',
   phone: '37999332222',
   email: 'antonio@pmginsumos.com',
-  RG: 'MG111',
-  RGEmitedBy: 'SSP/MG',
-  RGEmitedDate: new Date('2024-07-13T18:49:18.111Z'),
+  rg: {
+    number: 'MG111',
+    emitedBy: 'SSP/MG',
+    emitedDate: new Date('2024-07-13T18:49:18.111Z'),
+  },
   maritalStatus: MaritalStatusEnum.SINGLE,
 });
 

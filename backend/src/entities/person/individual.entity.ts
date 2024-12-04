@@ -40,13 +40,27 @@ const MATRIMONIAL_REGIME_MAP = {
   [MatrimonialRegimeEnum.FINAL_PARTCIPATION]: 'participação final nos aquestos',
 };
 
+export class Rg {
+  number: string;
+  emitedBy: string;
+  emitedDate: Date;
+
+  constructor(number: string, emitedBy: string, emitedDate: Date) {
+    this.number = number;
+    this.emitedBy = emitedBy;
+    this.emitedDate = emitedDate;
+  }
+
+  get qualification(): string {
+    return `portador(a) da cédula de identidade nº ${this.number}, ${this.emitedBy}, expedida em ${FormatterUtil.formatDateBR(this.emitedDate)}`;
+  }
+}
+
 export class IndividualEntity extends PersonEntity {
   cpf: string;
-  gender: GenderEnum;
-  RG: string;
-  RGEmitedBy: string;
-  RGEmitedDate: Date;
-  maritalStatus: MaritalStatusEnum;
+  gender?: GenderEnum;
+  rg?: Rg;
+  maritalStatus?: MaritalStatusEnum;
   matrimonialRegime?: MatrimonialRegimeEnum;
   spouse?: IndividualEntity;
   profession?: string;
@@ -59,15 +73,12 @@ export class IndividualEntity extends PersonEntity {
     let spouseText = '';
 
     if (this.isMarried) {
-      spouseText = `, casado(a) sob o regime de ${MATRIMONIAL_REGIME_MAP[this.matrimonialRegime]} com ${this.spouse.name},
-      portador(a) da cédula de identidade nº ${this.spouse.RG}, ${this.spouse.RGEmitedBy}, expedida em ${FormatterUtil.formatDateBR(this.spouse.RGEmitedDate)}, 
-      inscrito(a) no CPF nº ${FormatterUtil.formatCPF(this.spouse.cpf)}`;
+      spouseText = `, casado(a) sob o regime de ${MATRIMONIAL_REGIME_MAP[this.matrimonialRegime]} com ${this.spouse.qualification}`;
     }
 
     const professionText = this.profession ? ` ${this.profession},` : '';
 
-    return `${this.name}, Brasileiro(a), ${MARITAL_STATUS_MAP[this.maritalStatus]}(a),${professionText} portador(a) da cédula de identidade
-      nº ${this.RG}, ${this.RGEmitedBy}, expedida em ${FormatterUtil.formatDateBR(this.RGEmitedDate)}, inscrito (a) no
+    return `${this.name}, Brasileiro(a), ${MARITAL_STATUS_MAP[this.maritalStatus]}(a),${professionText} ${this.rg.qualification}, inscrito (a) no
       CPF nº ${FormatterUtil.formatCPF(this.cpf)}, telefone de contato: ${FormatterUtil.formatPhone(this.phone)}, e-mail: ${this.email}, residente
       domiciliado(a) na cidade de ${this.address.qualification}${spouseText}.`;
   }
@@ -83,12 +94,10 @@ export class IndividualEntity extends PersonEntity {
     address?: AddressEntity;
     cpf: string;
     gender: string;
-    RG: string;
-    RGEmitedBy: string;
-    RGEmitedDate: Date;
+    rg: { number: string; emitedBy: string; emitedDate: Date };
     maritalStatus: MaritalStatusEnum;
     matrimonialRegime?: MatrimonialRegimeEnum;
-    spouse?: IndividualEntity;
+    spouse?: SpouseEntity;
     profession?: string;
   }): IndividualEntity {
     const {
@@ -98,9 +107,7 @@ export class IndividualEntity extends PersonEntity {
       address,
       cpf,
       gender,
-      RG,
-      RGEmitedBy,
-      RGEmitedDate,
+      rg,
       maritalStatus,
       matrimonialRegime,
       spouse,
@@ -114,23 +121,54 @@ export class IndividualEntity extends PersonEntity {
       address,
       cpf,
       gender,
-      RG,
-      RGEmitedBy,
-      RGEmitedDate,
+      rg,
       maritalStatus,
       matrimonialRegime,
       spouse,
       profession,
     });
 
-    // if (individual.isMarried && !spouse) {
-    //   throw new Error('Para indivíduo casado deve ser informado o cônjuge.');
-    // }
+    if (individual.isMarried && !spouse) {
+      throw new Error('Para indivíduo casado deve ser informado o cônjuge.');
+    }
 
     if (individual.isMarried && !matrimonialRegime) {
       throw new Error('Para indivíduo casado deve ser o regime matrimonial.');
     }
 
     return individual;
+  }
+}
+
+export class SpouseEntity extends PersonEntity {
+  cpf: string;
+  rg: Rg;
+
+  static create(obj: {
+    name: string;
+    cpf: string;
+    rg?: { number: string; emitedBy: string; emitedDate: Date };
+  }): SpouseEntity {
+    const { name, cpf, rg } = obj;
+
+    const spouse = Object.assign(new SpouseEntity(), {
+      name,
+      cpf,
+      rg,
+    });
+
+    return spouse;
+  }
+
+  get qualification(): string {
+    let rgQualification = '';
+
+    if (this.rg) {
+      rgQualification = this.rg.qualification;
+    }
+
+    return `${this.name},
+      ${rgQualification}, 
+      inscrito(a) no CPF nº ${FormatterUtil.formatCPF(this.cpf)}`;
   }
 }

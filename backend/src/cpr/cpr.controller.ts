@@ -14,7 +14,7 @@ export class CprController {
   }
 
   @Post()
-  create(@Body() createCprDto: CreateCprDto) {
+  create(@Body() createCprDto: CreateCprDto): Promise<{ id: string }> {
     return this.cprService.create(createCprDto);
   }
 }

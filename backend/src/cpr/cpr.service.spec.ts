@@ -14,6 +14,8 @@ import {
   IndividualEntity,
   MaritalStatusEnum,
   MatrimonialRegimeEnum,
+  Rg,
+  SpouseEntity,
 } from '../entities/person/individual.entity';
 import { StateEnum } from '../infra/entities/state-enum';
 import { EmitterService } from '../emitter/emitter.service';
@@ -51,9 +53,11 @@ const mockCprDto: CreateCprDto = {
     email: 'paula.toller@gmail.com',
     cpf: '56387187028',
     gender: GenderEnum.FEMALE,
-    RG: 'MG22222',
-    RGEmitedBy: 'SSP/MG',
-    RGEmitedDate: new Date('2024-01-14T18:49:18.111Z'),
+    rg: {
+      number: 'MG22222',
+      emitedBy: 'SSP/MG',
+      emitedDate: new Date('2024-01-14T18:49:18.111Z'),
+    },
     maritalStatus: MaritalStatusEnum.MARRIED,
     matrimonialRegime: MatrimonialRegimeEnum.PARTIAL_COMMUNION,
     address: {
@@ -66,19 +70,12 @@ const mockCprDto: CreateCprDto = {
     },
     spouse: {
       name: 'Herbert Vianna',
-      phone: '32999880000',
-      email: 'herbert.vianna@gmail.com',
       cpf: '20991476042',
-      gender: GenderEnum.MALE,
-      RG: 'MG3333',
-      RGEmitedBy: 'SSP/MG',
-      RGEmitedDate: new Date('2024-01-11T18:49:18.111Z'),
-      maritalStatus: MaritalStatusEnum.MARRIED,
-      matrimonialRegime: MatrimonialRegimeEnum.PARTIAL_COMMUNION,
-      address: {} as AddressEntity,
-      cnpj: undefined,
-      legalName: undefined,
-      inscricaoEstadual: undefined,
+      rg: {
+        number: 'MG3333',
+        emitedBy: 'SSP/MG',
+        emitedDate: new Date('2024-01-11T18:49:18.111Z'),
+      },
     },
     cnpj: undefined,
     legalName: undefined,
@@ -118,9 +115,7 @@ const mockLegalRepresentative = IndividualEntity.create({
   name: 'Antônio Alvarenga Silva',
   phone: '37999332222',
   email: 'antonio@pmginsumos.com',
-  RG: 'MG111',
-  RGEmitedBy: 'SSP/MG',
-  RGEmitedDate: new Date('2024-07-13T18:49:18.111Z'),
+  rg: new Rg('MG111', 'SSP/MG', new Date('2024-07-13T18:49:18.111Z')),
   maritalStatus: MaritalStatusEnum.SINGLE,
 });
 
@@ -135,17 +130,10 @@ const mockCreditor = CreditorEntity.create({
   legalRepresentative: mockLegalRepresentative,
 });
 
-const mockIndividualSpouse = IndividualEntity.create({
+const mockIndividualSpouse = SpouseEntity.create({
   name: 'Camilla Cabelo',
-  phone: '37999885252',
-  email: 'camilla@cientist.com',
-  address: mockAddress,
   cpf: '90233070036',
-  gender: GenderEnum.FEMALE,
-  RG: 'MG574222',
-  RGEmitedBy: 'SSP/SP',
-  RGEmitedDate: new Date('2024-07-10T18:49:18.111Z'),
-  maritalStatus: MaritalStatusEnum.SINGLE,
+  rg: new Rg('MG574222', 'SSP/SP', new Date('2024-07-10T18:49:18.111Z')),
 });
 
 const mockIndividual = IndividualEntity.create({
@@ -155,9 +143,7 @@ const mockIndividual = IndividualEntity.create({
   address: mockAddress,
   cpf: '54289266002',
   gender: GenderEnum.MALE,
-  RG: 'MG574475',
-  RGEmitedBy: 'SSP/SP',
-  RGEmitedDate: new Date('2024-07-13T18:49:18.111Z'),
+  rg: new Rg('MG574475', 'SSP/SP', new Date('2024-07-13T18:49:18.111Z')),
   maritalStatus: MaritalStatusEnum.MARRIED,
   spouse: mockIndividualSpouse,
   matrimonialRegime: MatrimonialRegimeEnum.UNIVERSAL_COMMINUION,
@@ -327,8 +313,7 @@ describe('CprService', () => {
       );
 
       expect(createdCPR.emitter.qualification).toBe(
-        `Galileo di Vincenzo Bonaulti de Galilei, Brasileiro(a), casado(a), produtor rural, portador(a) da cédula de identidade
-      nº MG574475, SSP/SP, expedida em 13/07/2024, inscrito (a) no
+        `Galileo di Vincenzo Bonaulti de Galilei, Brasileiro(a), casado(a), produtor rural, portador(a) da cédula de identidade nº MG574475, SSP/SP, expedida em 13/07/2024, inscrito (a) no
       CPF nº 542.892.660-02, telefone de contato: (37) 99988-8484, e-mail: galileo@cientist.com, residente
       domiciliado(a) na cidade de Pimenta/MG, à Rua Principal, nº
       640, apto 101, (1234) - Bairro: Centro, CEP: 35585-000, casado(a) sob o regime de comunhão universal de bens com Camilla Cabelo,
@@ -337,8 +322,7 @@ describe('CprService', () => {
       );
 
       expect(createdCPR.guarantor.qualification).toBe(
-        `Paula Toller, Brasileiro(a), casado(a), portador(a) da cédula de identidade
-      nº MG22222, SSP/MG, expedida em 14/01/2024, inscrito (a) no
+        `Paula Toller, Brasileiro(a), casado(a), portador(a) da cédula de identidade nº MG22222, SSP/MG, expedida em 14/01/2024, inscrito (a) no
       CPF nº 563.871.870-28, telefone de contato: (31) 99988-0000, e-mail: paula.toller@gmail.com, residente
       domiciliado(a) na cidade de Belo Horizonte/MG, à Rua Albita, nº
       820 - Bairro: string, CEP: 30310-330, casado(a) sob o regime de comunhão parcial de bens com Herbert Vianna,
@@ -483,9 +467,7 @@ describe('CprService', () => {
         email: 'agricampo@pmginsumos.com',
         cpf: undefined,
         gender: undefined,
-        RG: undefined,
-        RGEmitedBy: undefined,
-        RGEmitedDate: undefined,
+        rg: undefined,
         maritalStatus: undefined,
         matrimonialRegime: undefined,
         spouse: undefined,
@@ -506,9 +488,11 @@ describe('CprService', () => {
           email: 'paula.toller@gmail.com',
           cpf: '13527694099',
           gender: GenderEnum.FEMALE,
-          RG: 'MG22222',
-          RGEmitedBy: 'SSP/MG',
-          RGEmitedDate: new Date('2024-01-14T18:49:18.111Z'),
+          rg: {
+            number: 'MG22222',
+            emitedBy: 'SSP/MG',
+            emitedDate: new Date('2024-01-14T18:49:18.111Z'),
+          },
           maritalStatus: MaritalStatusEnum.SINGLE,
           address: {
             postalCode: '30310-330',

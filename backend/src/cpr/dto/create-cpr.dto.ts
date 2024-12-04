@@ -88,6 +88,34 @@ class CreatePersonDto {
   @ValidateNested()
   address: CreateAddressDto;
 }
+class RgDto {
+  @ApiProperty()
+  @IsString()
+  number: string;
+
+  @ApiProperty()
+  @IsString()
+  emitedBy: string;
+
+  @ApiProperty()
+  @IsString()
+  emitedDate: Date;
+}
+
+class CreateGuarantorSpouseDto {
+  @ApiProperty()
+  @IsString()
+  name: string;
+
+  @ApiProperty()
+  @IsString()
+  cpf: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @ValidateNested()
+  rg?: RgDto;
+}
 
 // TODO condicionar obrigatoriede dos campos conforme tipo, se fo pessoa física ou juridica
 export class CreateGuarantorDto extends CreatePersonDto {
@@ -102,19 +130,10 @@ export class CreateGuarantorDto extends CreatePersonDto {
   @IsEnum(GenderEnum)
   gender: GenderEnum;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsOptional()
-  RG: string;
-
-  @ApiProperty()
-  @IsOptional()
-  RGEmitedBy: string;
-
-  @ApiProperty()
-  @IsOptional()
-  @Type(() => Date)
-  @IsDate()
-  RGEmitedDate: Date;
+  @ValidateNested()
+  rg?: RgDto;
 
   @ApiProperty({ enum: MaritalStatusEnum })
   @IsOptional()
@@ -126,7 +145,8 @@ export class CreateGuarantorDto extends CreatePersonDto {
 
   @ApiProperty({ required: false })
   @IsOptional()
-  spouse?: CreateGuarantorDto;
+  @ValidateNested()
+  spouse?: CreateGuarantorSpouseDto;
 
   @ApiProperty()
   @IsString()
