@@ -168,7 +168,7 @@ export class SpouseEntity extends PersonEntity {
     }
 
     return `${this.name},
-      ${rgQualification}, 
+      ${rgQualification ? rgQualification + ',' : ''} 
       inscrito(a) no CPF nº ${FormatterUtil.formatCPF(this.cpf)}`;
   }
 }
