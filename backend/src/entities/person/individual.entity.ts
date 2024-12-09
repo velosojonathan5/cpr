@@ -71,6 +71,7 @@ export class IndividualEntity extends PersonEntity {
 
   get qualification(): string {
     let spouseText = '';
+    let rgQualification = '';
 
     if (this.isMarried) {
       spouseText = `, casado(a) sob o regime de ${MATRIMONIAL_REGIME_MAP[this.matrimonialRegime]} com ${this.spouse.qualification}`;
@@ -78,7 +79,11 @@ export class IndividualEntity extends PersonEntity {
 
     const professionText = this.profession ? ` ${this.profession},` : '';
 
-    return `${this.name}, Brasileiro(a), ${MARITAL_STATUS_MAP[this.maritalStatus]}(a),${professionText} ${this.rg.qualification}, inscrito (a) no
+    if (this.rg) {
+      rgQualification = ` ${this.rg.qualification},`;
+    }
+
+    return `${this.name}, Brasileiro(a), ${MARITAL_STATUS_MAP[this.maritalStatus]}(a),${professionText}${rgQualification} inscrito (a) no
       CPF nº ${FormatterUtil.formatCPF(this.cpf)}, telefone de contato: ${FormatterUtil.formatPhone(this.phone)}, e-mail: ${this.email}, residente
       domiciliado(a) na cidade de ${this.address.qualification}${spouseText}.`;
   }
@@ -164,11 +169,11 @@ export class SpouseEntity extends PersonEntity {
     let rgQualification = '';
 
     if (this.rg) {
-      rgQualification = this.rg.qualification;
+      rgQualification = this.rg.qualification + ',';
     }
 
     return `${this.name},
-      ${rgQualification ? rgQualification + ',' : ''} 
+      ${rgQualification} 
       inscrito(a) no CPF nº ${FormatterUtil.formatCPF(this.cpf)}`;
   }
 }

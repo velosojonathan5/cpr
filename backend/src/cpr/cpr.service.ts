@@ -138,11 +138,16 @@ export class CprService extends BaseService<CprEntity> {
       }
 
       const address = AddressEntity.create(createGuarantorDto.address);
-      const rg = new Rg(
-        createGuarantorDto.rg.number,
-        createGuarantorDto.rg.emitedBy,
-        new Date(createGuarantorDto.rg.emitedDate),
-      );
+
+      let rg: Rg | undefined = undefined;
+
+      if (createGuarantorDto.rg) {
+        rg = new Rg(
+          createGuarantorDto.rg.number,
+          createGuarantorDto.rg.emitedBy,
+          new Date(createGuarantorDto.rg.emitedDate),
+        );
+      }
 
       individual = IndividualEntity.create({
         ...createGuarantorDto,
