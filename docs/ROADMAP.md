@@ -3,14 +3,14 @@
 ## 🗂️ Backend
 
 - [x] **Criação de CPR** com persistência in-memory.
-- [ ] Finalizar **geração do documento da CPR**.
+- [x] Finalizar **geração do documento da CPR**.
 - [x] Adicionar **persistência nos arquivos da aplicação** (S3, GCP Buckets).
 - [ ] Adicionar **persistência dos dados da aplicação** (banco de dados).
 - [ ] Implementar **autenticação** (ex: Cognito ou outra solução).
-- [ ] Adicionar suporte a **multi-tenant** (lógica de organizações).
 - [ ] Criar **rotas de CRUD** (emitente, credor, fazendas, local de entrega, etc.).
 - [ ] Implementar funcionalidade de **envio para assinatura digital**, conforme o provedor do tenant.
 - [ ] Revisar e ajustar lógica do backend (detalhar escopo).
+- [ ] Adicionar suporte a **multi-tenant** (lógica de organizações).
 
 ---
 
