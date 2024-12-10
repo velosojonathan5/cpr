@@ -9,6 +9,7 @@ import {
   IsPositive,
   IsString,
   IsUUID,
+  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 import {
@@ -174,10 +175,11 @@ export class CreateGuarantorDto extends CreatePersonDto {
   @IsOptional()
   inscricaoEstadual: string;
 
-  @ApiProperty()
+  @ValidateIf((obj) => obj.cnpj)
+  @ApiProperty({ required: true })
+  @IsObject()
   @ValidateNested()
-  @IsOptional()
-  legalRepresentative?: LegalRepresentativeDto;
+  legalRepresentative: LegalRepresentativeDto;
 }
 
 enum CropEnum {
