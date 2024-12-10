@@ -176,7 +176,6 @@ export class CreateGuarantorDto extends CreatePersonDto {
 
   @ApiProperty()
   @ValidateNested()
-  @IsString()
   @IsOptional()
   legalRepresentative?: LegalRepresentativeDto;
 }
