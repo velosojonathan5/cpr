@@ -98,7 +98,7 @@ export class RentRegistry extends SiteRegistry {
   }
 
   static create(obj: Partial<RentRegistry>) {
-    const registry = RentRegistry.create(obj);
+    const registry = SiteRegistry.create(obj);
 
     return Object.assign(new RentRegistry(), {
       ...registry,
@@ -184,10 +184,10 @@ export class FarmEntity extends TenantEntity {
       },
     ];
 
-    qualifications = qualifications.concat(this.siteRegistry.qualifications);
-
     if (this.isRent) {
       qualifications = qualifications.concat(this.rentRegistry.qualifications);
+    } else {
+      qualifications = qualifications.concat(this.siteRegistry.qualifications);
     }
 
     return qualifications;

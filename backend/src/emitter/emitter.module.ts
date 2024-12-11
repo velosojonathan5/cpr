@@ -14,6 +14,7 @@ import {
   FarmEntity,
   PossessionEnum,
   SiteRegistry,
+  RentRegistry,
 } from '../entities/person/farm.entity';
 import { StateEnum } from '../infra/entities/state-enum';
 
@@ -40,12 +41,28 @@ const mockAddress = AddressEntity.create({
   state: StateEnum.MG,
   publicArea: 'Rua Principal',
   number: '640',
-  district: 'Centro',
-  complement: 'apto 101',
-  mailbox: '1234',
+  district: 'Zona Rural'
 });
 
-const mockRegistry = SiteRegistry.create({ number: 'MAT11333' });
+const mockRegistry = SiteRegistry.create({ 
+  number: 'PROP11333', 
+  regitryPlaceName:'Cartório de registros',
+  address: mockAddress,
+  book: '5000',
+  sheet: '145',
+  regitryDate: new Date('2022-07-13T18:49:18.111Z'),
+});
+
+const mockRentRegistry = RentRegistry.create({ 
+  number: 'ARRED11333', 
+  initialDate: new Date('2023-07-13T18:49:18.111Z'),
+  finalDate: new Date('2026-07-13T18:49:18.111Z'),
+  regitryPlaceName:'Cartório de registros de arrendamento',
+  address: mockAddress,
+  book: '5000',
+  sheet: '145',
+  regitryDate: new Date('2023-07-13T18:49:18.111Z'),
+});
 
 const mockFarm = FarmEntity.create({
   name: 'Fazenda Dois Irmãos',
@@ -57,8 +74,8 @@ const mockFarm = FarmEntity.create({
   tatalArea: 200,
   cultivatedArea: 1000,
   nirf: 'NIRF7700',
-  possession: PossessionEnum.OWNER,
-  siteRegistry: mockRegistry,
+  possession: PossessionEnum.RENT,
+  rentRegistry: mockRentRegistry,
 });
 
 mockFarm.id = '0190c91f-6a4f-7bc8-8cca-ae6633e25c40';
