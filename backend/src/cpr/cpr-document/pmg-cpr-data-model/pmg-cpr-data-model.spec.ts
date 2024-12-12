@@ -1,4 +1,3 @@
-import { describe } from 'node:test';
 import { CprEntity } from '../../../entities/cpr/cpr.entity';
 import { PMGCprDataModel } from './pmg-cpr-data-model'; // Ajuste o caminho conforme necessário
 
