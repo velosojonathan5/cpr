@@ -1,15 +1,5 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { CreditorService } from './creditor.service';
-import { CreateCreditorDto } from './dto/create-creditor.dto';
-import { UpdateCreditorDto } from './dto/update-creditor.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Credor')

@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
 import { EmitterService } from './emitter.service';
 import { CreateEmitterDto } from './dto/create-emitter.dto';
 import { UpdateEmitterDto } from './dto/update-emitter.dto';
@@ -105,6 +97,7 @@ export class EmitterController {
 
   @Post()
   create(@Body() createEmitterDto: CreateEmitterDto) {
+    return createEmitterDto;
     // return this.emitterService.create(createEmitterDto);
   }
 
@@ -127,11 +120,7 @@ export class EmitterController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateEmitterDto: UpdateEmitterDto) {
+    return updateEmitterDto;
     // return this.emitterService.update(+id, updateEmitterDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    // return this.emitterService.remove(id);
   }
 }
