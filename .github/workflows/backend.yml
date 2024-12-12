@@ -37,5 +37,5 @@ jobs:
       - name: Scan for secrets with GitLeaks
         uses: github/codeql-action/analyze@v1
         with:
-          config-file: ./config/gitleaks.yml
+          config-file: config/gitleaks.yml
           languages: javascript
