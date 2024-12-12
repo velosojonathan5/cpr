@@ -98,7 +98,6 @@ const mockCprDto: CreateCprDto = {
       value: 5000,
     },
   ],
-  value: 10000,
   responsibleForExpenses: ResponsibleForExpensesEnum.EMITTER,
 };
 
@@ -539,21 +538,10 @@ describe('CprService', () => {
       deliveryPlaceRepository.insert(mockDeliveryPlace);
       mockCprDto.deliveryPlace.id = mockDeliveryPlace.id;
 
-      mockCprDto.value = 9999.99;
+      const { id } = await service.create(mockCprDto);
 
-      const fn = async () => await service.create(mockCprDto);
-
-      await expect(fn()).rejects.toThrow(
-        'A soma dos valores do cronograma de pagamentos deve ser igual ao valor da CPR.',
-      );
-
-      mockCprDto.value = 10000.01;
-
-      const fn2 = async () => await service.create(mockCprDto);
-
-      await expect(fn2()).rejects.toThrow(
-        'A soma dos valores do cronograma de pagamentos deve ser igual ao valor da CPR.',
-      );
+      const cpr = await repository.getById(id);
+      expect(cpr.value).toBe(10000);
     });
 
     it('Should create a physical CPR when possession of the farm is Rent', async () => {

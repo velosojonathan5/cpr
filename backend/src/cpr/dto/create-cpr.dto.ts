@@ -255,11 +255,6 @@ export class CreateCprDto {
   @ValidateNested()
   paymentSchedule: CreatePaymentDto[];
 
-  @ApiProperty({ description: 'Valor' })
-  @IsNumber()
-  @IsPositive()
-  value: number;
-
   @ApiProperty({
     enum: ResponsibleForExpensesEnum,
     description: 'Responsabilidade pelas despesas',
