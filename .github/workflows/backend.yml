@@ -35,7 +35,4 @@ jobs:
       - name: Run Tests
         run: npm test
       - name: Scan for secrets with GitLeaks
-        uses: github/codeql-action/analyze@v1
-        with:
-          config-file: config/gitleaks.yml
-          languages: javascript
+        run: gitleaks detect --config config/gitleaks.yml
