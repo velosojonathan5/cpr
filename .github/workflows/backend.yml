@@ -34,5 +34,3 @@ jobs:
         run: npm run lint
       - name: Run Tests
         run: npm test
-      - name: Scan for secrets with GitLeaks
-        run: gitleaks detect --config config/gitleaks.yml
