@@ -24,11 +24,13 @@ const sections: SectionTemplate[] = [
     contentFn: (cpr) =>
       cpr.guarantor ? sanitize(cpr.guarantor.qualification) : undefined,
   },
+
   {
     title: '1) DO OBJETO',
     content:
       'Fornecimento de produtos e insumos agrícolas pela CREDORA para o EMITENTE, em troca/BARTER de parte ou totalidade de sua safra para saldar o débito existente com a CREDORA.',
   },
+
   {
     title: '2) DO PRODUTO',
     contentFn: (cpr) =>
@@ -47,6 +49,7 @@ const sections: SectionTemplate[] = [
     title: '5) DO ACONDICIONAMENTO',
     content: `A granel`,
   },
+
   {
     title: '6) DO LOCAL DE FORMAÇÃO DA LAVOURA',
     contentFn: (cpr) =>
@@ -54,6 +57,7 @@ const sections: SectionTemplate[] = [
         (q) => q.label + ': ' + sanitize(q.content),
       ),
   },
+
   {
     title: '7) DAS CONDIÇÕES DE ENTREGA',
     contentFn: (cpr) => [
@@ -69,6 +73,7 @@ const sections: SectionTemplate[] = [
       'g) Outras obrigações: O EMITENTE se compromete a dar prioridade ao cumprimento deste Contrato em relação a eventuais outras obrigações de entrega de produtos similares ao Produto, firmadas entre o EMITENTE e terceiros.',
     ],
   },
+
   {
     title: '8) DO PREÇO E FORMA DE LIQUIDAÇÃO',
     contentFn: (cpr) => [

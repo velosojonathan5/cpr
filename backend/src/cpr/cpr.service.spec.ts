@@ -82,6 +82,7 @@ const mockCprDto: CreateCprDto = {
     cnpj: undefined,
     legalName: undefined,
     inscricaoEstadual: undefined,
+    legalRepresentative: undefined,
   },
   product: ProductKeyEnum.SOY,
   crop: '2024/2025',
