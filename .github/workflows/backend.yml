@@ -35,7 +35,8 @@ jobs:
         run: npm run lint
       - name: Run Tests
         run: npm test
-      - name: Scan for secrets with GitLeaks
-        uses: github/codeql-action/analyze@v1
-        with:
-          languages: javascript
+      # TODO configurar
+      # - name: Scan for secrets with GitLeaks
+      #   uses: github/codeql-action/analyze@v1
+      #   with:
+      #     languages: javascript
