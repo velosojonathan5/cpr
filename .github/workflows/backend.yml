@@ -1,12 +1,12 @@
-name: CI NestJS
+name: CI Backend
 
 on:
   push:
     branches: [ main ]
-    paths: '/backend/**'
+    paths: 'backend/**'
   pull_request:
     branches: [ main ]
-    paths: '/backend/**'
+    paths: 'backend/**'
     #types: [opened, reopened, synchronize, ready_for_review]
 
 jobs:
