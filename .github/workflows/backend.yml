@@ -3,10 +3,10 @@ name: CI NestJS
 on:
   push:
     branches: [ main ]
-    #paths: [backend/**]
+    paths: [./backend/**]
   pull_request:
     branches: [ main ]
-    #paths: [backend/**]
+    paths: [./backend/**]
     #types: [opened, reopened, synchronize, ready_for_review]
 
 jobs:
@@ -35,8 +35,8 @@ jobs:
         run: npm run lint
       - name: Run Tests
         run: npm test
-      # TODO configurar
-      # - name: Scan for secrets with GitLeaks
-      #   uses: github/codeql-action/analyze@v1
-      #   with:
-      #     languages: javascript
+      - name: Scan for secrets with GitLeaks
+        uses: github/codeql-action/analyze@v1
+        with:
+          config-file: ./config/gitleaks.yml
+          languages: javascript

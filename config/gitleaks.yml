@@ -1,0 +1,12 @@
+# gitleaks.yml
+rules:
+  - path: backend/.env.example
+    exclude:
+      - 'DB_PASS=my-secret-pw'
+
+flags:
+  - --show-all-matches
+  - --severity high
+  - --reporter json
+
+# Adicione mais regras e flags conforme necessário
