@@ -74,14 +74,8 @@ export class CprService extends BaseService<CprEntity> {
         createCprDto.productDevelopmentSite.cultivatedArea;
     }
 
-    const {
-      product,
-      crop,
-      quantity,
-      paymentSchedule,
-      value,
-      responsibleForExpenses,
-    } = createCprDto;
+    const { product, crop, quantity, paymentSchedule, responsibleForExpenses } =
+      createCprDto;
     const cpr = CprEntity.create({
       creditor,
       emitter,
@@ -94,7 +88,6 @@ export class CprService extends BaseService<CprEntity> {
         PaymentEntity.create(p.dueDate, p.value),
       ),
       deliveryPlace,
-      value,
       responsibleForExpenses,
     });
 
@@ -104,7 +97,7 @@ export class CprService extends BaseService<CprEntity> {
       contentType: 'application/pdf',
     });
 
-    super.save(cpr);
+    await super.save(cpr);
 
     return { id: cpr.id };
   }
