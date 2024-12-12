@@ -1,8 +1,6 @@
 import { describe } from 'node:test';
 import { CprEntity } from '../../../entities/cpr/cpr.entity';
 import { PMGCprDataModel } from './pmg-cpr-data-model'; // Ajuste o caminho conforme necessário
-import { content } from 'pdfkit/js/page';
-import exp from 'node:constants';
 
 describe('PMGCprDataModel', () => {
   let cprDataModel: PMGCprDataModel;
