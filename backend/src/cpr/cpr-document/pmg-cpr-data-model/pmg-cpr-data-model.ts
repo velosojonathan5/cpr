@@ -10,7 +10,7 @@ const sections: SectionTemplate[] = [
   {
     titleFn: (cpr) => `Nº ${cpr.number}`,
     contentFn: (cpr) => 'Emitido em ' + cpr.issueDateFormatted,
-  },  
+  },
   {
     title: 'CREDORA',
     contentFn: (cpr) => sanitize(cpr.creditor.qualification),
@@ -24,7 +24,7 @@ const sections: SectionTemplate[] = [
     contentFn: (cpr) =>
       cpr.guarantor ? sanitize(cpr.guarantor.qualification) : undefined,
   },
-  
+
   {
     title: '1) DO OBJETO',
     content:
@@ -73,7 +73,7 @@ const sections: SectionTemplate[] = [
       'g) Outras obrigações: O EMITENTE se compromete a dar prioridade ao cumprimento deste Contrato em relação a eventuais outras obrigações de entrega de produtos similares ao Produto, firmadas entre o EMITENTE e terceiros.',
     ],
   },
-  
+
   {
     title: '8) DO PREÇO E FORMA DE LIQUIDAÇÃO',
     contentFn: (cpr) => [
