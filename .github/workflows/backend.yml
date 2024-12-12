@@ -2,10 +2,10 @@ name: CI NestJS
 
 on:
   push:
-    branches: [develop, main]
+    branches: [ main ]
     paths: [backend/**]
   pull_request:
-    branches: [develop, main]
+    branches: [ main ]
     paths: [backend/**]
     types: [opened, reopened, synchronize, ready_for_review]
 
