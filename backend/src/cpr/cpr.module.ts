@@ -12,10 +12,11 @@ import { LocalFileManagerClient } from '../file-manager-client/local-file-manage
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CprRepository } from './repository/cpr.repository';
 import { CprModel } from './repository/cpr.model';
+import { PaymentModel } from './repository/payment.model';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([CprModel]),
+    TypeOrmModule.forFeature([CprModel, PaymentModel]),
     CreditorModule,
     EmitterModule,
     DeliveryPlaceModule,
