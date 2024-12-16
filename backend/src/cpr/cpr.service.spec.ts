@@ -334,6 +334,8 @@ describe('CprService', () => {
       expect(createdCPR.crop).toBe('2024/2025');
       expect(createdCPR.quantity).toBe(24580);
       expect(createdCPR.sacas).toBe(409.6666666666667);
+      expect(createdCPR.sacasFormatted).toBe('409,67');
+      expect(createdCPR.quantityFormatted).toBe('24.580,00');
 
       expect(createdCPR.productDevelopmentSite.cultivatedArea).toBe(540);
 
@@ -400,6 +402,12 @@ describe('CprService', () => {
         `R$${String.fromCharCode(160)}5.000,00 com vencimento em 11/08/2024`,
       );
 
+      expect(createdCPR.paymentScheduleText).toBe(
+        '1ª parcela de ' +
+          createdCPR.paymentSchedule[0].qualification +
+          ', 2ª parcela de ' +
+          createdCPR.paymentSchedule[1].qualification,
+      );
       expect(createdCPR.valueFormatted).toBe(
         `R$${String.fromCharCode(160)}10.000,00`,
       );
