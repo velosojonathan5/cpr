@@ -184,8 +184,6 @@ export class FarmEntity extends TenantEntity {
       },
     ];
 
-    qualifications = qualifications.concat(this.siteRegistry.qualifications);
-
     if (this.isRent) {
       qualifications = qualifications.concat(this.rentRegistry.qualifications);
     } else {
