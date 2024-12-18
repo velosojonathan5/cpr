@@ -4,7 +4,6 @@ export class InMemoryRepository<T extends { id?: string }>
   implements CRUDRepository<T>
 {
   private data: T[] = [];
-  private nextId: number = 1;
 
   find(condition?: Record<string, unknown>): Promise<T[]> {
     if (!condition) {
