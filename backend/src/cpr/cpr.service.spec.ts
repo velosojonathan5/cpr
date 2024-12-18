@@ -737,7 +737,6 @@ describe('CprService', () => {
       const { id } = await service.create(mockCprDto);
 
       const createdCPR = await repository.getById(id);
-      console.log(createdCPR.productDevelopmentSite.qualifications);
 
       expect(createdCPR.productDevelopmentSite.qualifications[10]).toBe(
         undefined,
