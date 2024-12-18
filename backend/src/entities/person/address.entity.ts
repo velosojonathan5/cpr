@@ -36,4 +36,8 @@ export class AddressEntity extends TenantEntity {
   }) {
     return Object.assign(new AddressEntity(), obj);
   }
+
+  static restore(obj: Partial<AddressEntity>): AddressEntity {
+    return Object.assign(new AddressEntity(), obj);
+  }
 }

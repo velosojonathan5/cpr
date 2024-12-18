@@ -219,7 +219,7 @@ export class PMGCprDataModel {
       email: cpr.emitter.email,
     });
 
-    if (cpr.emitter.individual.spouse) {
+    if (cpr.emitter.individual?.spouse) {
       signatories.push({
         role: 'Cônjuge do emitente',
         name: cpr.emitter.name,

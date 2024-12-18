@@ -16,6 +16,15 @@ import {
   SiteRegistry,
 } from '../entities/person/farm.entity';
 import { StateEnum } from '../infra/entities/state-enum';
+import { EmitterRepository } from './repository/emitter.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { EmitterModel } from './repository/emitter.model';
+import { SpouseModel } from '../infra/repository/typeORM/spouse.model';
+import { CompanyModel } from 'src/infra/repository/typeORM/company.model';
+import { IndividualModel } from 'src/infra/repository/typeORM/individual.model';
+import { FarmModel } from './repository/farm.model';
+import { RentRegistryModel } from './repository/rent-registry.model';
+import { SiteRegistryModel } from './repository/site-registry.model';
 
 const mockAddress = AddressEntity.create({
   postalCode: '35585000',
@@ -86,12 +95,27 @@ const repo = new InMemoryRepository<EmitterEntity>();
 repo.insert(mockEmitter);
 
 @Module({
+  imports: [
+    TypeOrmModule.forFeature([
+      EmitterModel,
+      CompanyModel,
+      IndividualModel,
+      SpouseModel,
+      FarmModel,
+      RentRegistryModel,
+      SiteRegistryModel,
+    ]),
+  ],
   controllers: [EmitterController],
   providers: [
     EmitterService,
+    // {
+    //   provide: 'KEY_REPOSITORY_EMITTER',
+    //   useValue: repo,
+    // },
     {
       provide: 'KEY_REPOSITORY_EMITTER',
-      useValue: repo,
+      useClass: EmitterRepository,
     },
   ],
   exports: [EmitterService],

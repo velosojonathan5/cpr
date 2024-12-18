@@ -65,4 +65,8 @@ export class CompanyEntity extends PersonEntity {
       legalRepresentative,
     });
   }
+
+  static restore(obj: Partial<CompanyEntity>): CompanyEntity {
+    return Object.assign(new CompanyEntity(), obj);
+  }
 }

@@ -12,4 +12,12 @@ export class CprRepository extends TypeORMRepository<CprModel> {
   ) {
     super(cprRepository);
   }
+
+  insert(entity: CprModel): Promise<CprModel> {
+    return this.cprRepository.save({
+      ...entity,
+      creditorDetails: entity.creditor,
+      emitterDetails: entity.emitter,
+    });
+  }
 }
