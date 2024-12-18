@@ -3,7 +3,7 @@ import { CRUDRepository } from '../crud.repository';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 export class TypeORMRepository<T> implements CRUDRepository<T> {
-  constructor(private readonly repository: Repository<T>) {}
+  constructor(private readonly repository: Repository<any>) {}
 
   async find(condition?: Record<string, unknown>): Promise<T[]> {
     return this.repository.find({ where: condition as FindOptionsWhere<T> });

@@ -10,7 +10,7 @@ export class EmitterEntity extends PersonEntity {
   developmentSites: FarmEntity[];
   private _qualification: string;
 
-  constructor(id: string) {
+  private constructor(id?: string) {
     super(id);
   }
 

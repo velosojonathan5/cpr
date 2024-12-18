@@ -143,6 +143,10 @@ export class IndividualEntity extends PersonEntity {
 
     return individual;
   }
+
+  static restore(obj: unknown): IndividualEntity {
+    return Object.assign(new IndividualEntity(), obj);
+  }
 }
 
 export class SpouseEntity extends PersonEntity {
@@ -175,5 +179,9 @@ export class SpouseEntity extends PersonEntity {
     return `${this.name},
       ${rgQualification} 
       inscrito(a) no CPF nº ${FormatterUtil.formatCPF(this.cpf)}`;
+  }
+
+  static restore(obj: unknown): SpouseEntity {
+    return Object.assign(new SpouseEntity(), obj);
   }
 }
