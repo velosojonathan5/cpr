@@ -29,6 +29,7 @@ import {
   FarmEntity,
   PossessionEnum,
   SiteRegistry,
+  RentRegistry,
 } from '../entities/person/farm.entity';
 import { DeliveryPlaceService } from '../delivery-place/delivery-place.service';
 import { CprDocumentFactory } from './cpr-document/cpr-document-factory';
@@ -159,7 +160,14 @@ const mockCompany = CompanyEntity.create({
   legalRepresentative: mockLegalRepresentative,
 });
 
-const mockRegistry = SiteRegistry.create({ number: 'MAT11333' });
+const mockRegistry = SiteRegistry.create({
+  number: 'PROP11333',
+  regitryPlaceName: 'Cartório de Registro de imóveis',
+  address: mockAddress,
+  book: 'L5000',
+  sheet: 'F145',
+  regitryDate: new Date('2022-07-13T18:49:18.111Z'),
+});
 
 const mockFarm = FarmEntity.create({
   name: 'Fazenda Dois Irmãos',
@@ -169,7 +177,7 @@ const mockFarm = FarmEntity.create({
   address: mockAddress,
   legalRepresentative: undefined,
   tatalArea: 200,
-  cultivatedArea: 1000,
+  cultivatedArea: 540,
   nirf: 'NIRF7700',
   possession: PossessionEnum.OWNER,
   siteRegistry: mockRegistry,
@@ -231,6 +239,10 @@ describe('CprService', () => {
           read() {},
         }),
     } as unknown as CprDocumentFactory;
+
+    mockCprDto.value = 10000;
+
+    repository['data'] = [];
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -334,6 +346,8 @@ describe('CprService', () => {
       expect(createdCPR.crop).toBe('2024/2025');
       expect(createdCPR.quantity).toBe(24580);
       expect(createdCPR.sacas).toBe(409.6666666666667);
+      expect(createdCPR.sacasFormatted).toBe('409,67');
+      expect(createdCPR.quantityFormatted).toBe('24.580,00');
 
       expect(createdCPR.productDevelopmentSite.cultivatedArea).toBe(540);
 
@@ -390,7 +404,25 @@ describe('CprService', () => {
         'Número da matrícula',
       );
       expect(createdCPR.productDevelopmentSite.qualifications[7].content).toBe(
-        'MAT11333',
+        'PROP11333',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[8].label).toBe(
+        'Cartório de registro da matrícula',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[8].content).toBe(
+        'Cartório de Registro de imóveis, Pimenta/MG',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[9].label).toBe(
+        'Livro e folha de registro da matrícula',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[9].content).toBe(
+        'Livro L5000 na folha F145',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[10].label).toBe(
+        'Data de registro da matrícula',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[10].content).toBe(
+        '13/07/2022',
       );
 
       expect(createdCPR.paymentSchedule[0].qualification).toBe(
@@ -400,6 +432,12 @@ describe('CprService', () => {
         `R$${String.fromCharCode(160)}5.000,00 com vencimento em 11/08/2024`,
       );
 
+      expect(createdCPR.paymentScheduleText).toBe(
+        '1ª parcela de ' +
+          createdCPR.paymentSchedule[0].qualification +
+          ', 2ª parcela de ' +
+          createdCPR.paymentSchedule[1].qualification,
+      );
       expect(createdCPR.valueFormatted).toBe(
         `R$${String.fromCharCode(160)}10.000,00`,
       );
@@ -515,6 +553,193 @@ describe('CprService', () => {
 
       await expect(fn2()).rejects.toThrow(
         'A soma dos valores do cronograma de pagamentos deve ser igual ao valor da CPR.',
+      );
+    });
+
+    it('Should create a physical CPR when possession of the farm is Rent', async () => {
+      const mockIndividual1 = IndividualEntity.create({
+        name: 'Francesco di Vincenzo Bonaulti de Galilei',
+        phone: '37999888484',
+        email: 'Francesco@teste.com',
+        address: mockAddress,
+        cpf: '54289266002',
+        gender: GenderEnum.MALE,
+        rg: new Rg('MG574475', 'SSP/SP', new Date('2024-07-13T18:49:18.111Z')),
+        maritalStatus: MaritalStatusEnum.SINGLE,
+        profession: 'produtor rural',
+      });
+
+      const mockRentRegistry = RentRegistry.create({
+        number: 'ARRED11333',
+        initialDate: new Date('2024-07-13T18:49:18.111Z'),
+        finalDate: new Date('2026-07-13T18:49:18.111Z'),
+        regitryPlaceName: 'Cartório da comarca',
+        address: mockAddress,
+        book: 'L4500',
+        sheet: 'F500',
+        regitryDate: new Date('2024-07-13T18:49:18.111Z'),
+      });
+
+      const mockFarm1 = FarmEntity.create({
+        name: 'Fazenda Albertos',
+        inscricaoEstadual: '69846846855',
+        phone: '37999334671',
+        email: 'fazendaalbertos@teste.com',
+        address: mockAddress,
+        legalRepresentative: undefined,
+        tatalArea: 5000,
+        cultivatedArea: 1000,
+        nirf: 'NIRF4141',
+        possession: PossessionEnum.RENT,
+        rentRegistry: mockRentRegistry,
+      });
+
+      const mockEmitterTest = EmitterEntity.create(mockIndividual1, [
+        mockFarm1,
+      ]);
+
+      creditorRepository.insert(mockCreditor);
+      mockCprDto.creditor.id = mockCreditor.id;
+
+      emitterRepository.insert(mockEmitterTest);
+      mockCprDto.emitter.id = mockEmitterTest.id;
+
+      mockCprDto.productDevelopmentSite.id = mockFarm1.id;
+
+      deliveryPlaceRepository.insert(mockDeliveryPlace);
+      mockCprDto.deliveryPlace.id = mockDeliveryPlace.id;
+
+      const { id } = await service.create(mockCprDto);
+
+      const createdCPR = await repository.getById(id);
+
+      expect(createdCPR.productDevelopmentSite.qualifications[0].label).toBe(
+        'Imóvel rural',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[0].content).toBe(
+        'Fazenda Albertos',
+      );
+
+      expect(createdCPR.productDevelopmentSite.qualifications[1].label).toBe(
+        'Inscrição Estadual',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[1].content).toBe(
+        '69846846855',
+      );
+
+      expect(createdCPR.productDevelopmentSite.qualifications[2].label).toBe(
+        'Localização do imóvel rural',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[2].content).toBe(
+        `Pimenta/MG, à Rua Principal, nº 640, apto 101, (1234) - Bairro: Centro, CEP: 35585-000`,
+      );
+
+      expect(createdCPR.productDevelopmentSite.qualifications[3].label).toBe(
+        'Área total em hectares',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[3].content).toBe(
+        '5.000,00',
+      );
+
+      expect(createdCPR.productDevelopmentSite.qualifications[4].label).toBe(
+        'Área cultivada em hectares',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[4].content).toBe(
+        '540,00',
+      );
+
+      expect(createdCPR.productDevelopmentSite.qualifications[5].label).toBe(
+        'NIRF',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[5].content).toBe(
+        'NIRF4141',
+      );
+
+      expect(createdCPR.productDevelopmentSite.qualifications[6].label).toBe(
+        'Posse',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[6].content).toBe(
+        'Arrendatário',
+      );
+
+      expect(createdCPR.productDevelopmentSite.qualifications[7].label).toBe(
+        'Número da matrícula do arrendamento',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[7].content).toBe(
+        'ARRED11333',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[8].label).toBe(
+        'Cartório de registro da matrícula do arrendamento',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[8].content).toBe(
+        'Cartório da comarca, Pimenta/MG',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[9].label).toBe(
+        'Livro e folha de registro da matrícula do arrendamento',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[9].content).toBe(
+        'Livro L4500 na folha F500',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[10].label).toBe(
+        'Data de registro da matrícula do arrendamento',
+      );
+      expect(createdCPR.productDevelopmentSite.qualifications[10].content).toBe(
+        '13/07/2024',
+      );
+    });
+    it('regitryDate should return undefined', async () => {
+      const mockIndividual2 = IndividualEntity.create({
+        name: 'Francesco di Vincenzo Bonaulti de Galilei',
+        phone: '37999888484',
+        email: 'Francesco@teste.com',
+        address: mockAddress,
+        cpf: '54289266002',
+        gender: GenderEnum.MALE,
+        rg: new Rg('MG574475', 'SSP/SP', new Date('2024-07-13T18:49:18.111Z')),
+        maritalStatus: MaritalStatusEnum.SINGLE,
+        profession: 'produtor rural',
+      });
+
+      const mockFarm2 = FarmEntity.create({
+        name: 'Fazenda Nove Irmãos',
+        inscricaoEstadual: '698468468',
+        phone: '37999334671',
+        email: 'fadois@gmail.com',
+        address: mockAddress,
+        legalRepresentative: undefined,
+        tatalArea: 200,
+        cultivatedArea: 540,
+        nirf: 'NIRF7700',
+        possession: PossessionEnum.OWNER,
+        siteRegistry: SiteRegistry.create({
+          number: 'PROP11333',
+          regitryPlaceName: 'Cartório de Registro de imóveis',
+          address: undefined,
+          book: 'L5000',
+          sheet: 'F145',
+          regitryDate: undefined,
+        }),
+      });
+
+      const mockEmitter2 = EmitterEntity.create(mockIndividual2, [mockFarm2]);
+
+      creditorRepository.insert(mockCreditor);
+      mockCprDto.creditor.id = mockCreditor.id;
+
+      emitterRepository.insert(mockEmitter2);
+      mockCprDto.emitter.id = mockEmitter2.id;
+
+      mockCprDto.productDevelopmentSite.id = mockFarm2.id;
+
+      deliveryPlaceRepository.insert(mockDeliveryPlace);
+      mockCprDto.deliveryPlace.id = mockDeliveryPlace.id;
+
+      const { id } = await service.create(mockCprDto);
+
+      const createdCPR = await repository.getById(id);
+
+      expect(createdCPR.productDevelopmentSite.qualifications[10]).toBe(
+        undefined,
       );
     });
   });
