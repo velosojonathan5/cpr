@@ -1,10 +1,18 @@
 import { PossessionEnum } from '../../entities/person/farm.entity';
 import { BaseModel } from '../../infra/repository/typeORM/base.model';
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { AddressModel } from '../../infra/repository/typeORM/address.model';
 import { SiteRegistryModel } from './site-registry.model';
 import { RentRegistryModel } from './rent-registry.model';
 import { EmitterModel } from './emitter.model';
+import { CprModel } from '../../cpr/repository/cpr.model';
 
 @Entity('farm')
 export class FarmModel extends BaseModel {
@@ -40,4 +48,7 @@ export class FarmModel extends BaseModel {
 
   @ManyToOne(() => EmitterModel, (emitter) => emitter.developmentSites)
   emitter: EmitterModel;
+
+  @OneToMany(() => CprModel, (cpr) => cpr.productDevelopmentSite)
+  cprs: any;
 }

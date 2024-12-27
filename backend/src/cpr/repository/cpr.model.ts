@@ -3,12 +3,13 @@ import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { BaseModel } from '../../infra/repository/typeORM/base.model';
 import { GuarantorEntity } from '../../entities/person/guarantor.entity';
 import { ProductEntity } from '../../entities/product.entity';
-import { FarmEntity } from '../../entities/person/farm.entity';
 import { CompanyEntity } from '../../entities/person/company.entity';
 import { ResponsibleForExpensesEnum } from '../../entities/cpr/cpr.entity';
 import { PaymentModel } from './payment.model';
 import { CreditorModel } from '../../creditor/repository/creditor.model';
 import { EmitterModel } from '../../emitter/repository/emitter.model';
+import { FarmModel } from '../../emitter/repository/farm.model';
+import { FarmEntity } from '../../entities/person/farm.entity';
 
 @Entity('cpr')
 export class CprModel extends BaseModel {
@@ -33,8 +34,8 @@ export class CprModel extends BaseModel {
   @Column({ name: 'quantity' })
   quantity: number;
 
-  @Column({ name: 'product_development_site', type: 'json' })
-  productDevelopmentSite: FarmEntity;
+  @Column({ name: 'product_development_site_details', type: 'json' })
+  productDevelopmentSiteDetails: FarmEntity;
 
   @Column({ name: 'delivery_place', type: 'json' })
   deliveryPlace: CompanyEntity;
@@ -57,4 +58,7 @@ export class CprModel extends BaseModel {
 
   @ManyToOne(() => EmitterModel, (emitter) => emitter.cprs)
   emitter: EmitterModel;
+
+  @ManyToOne(() => FarmModel, (farm) => farm.cprs)
+  productDevelopmentSite: FarmModel;
 }
