@@ -10,6 +10,7 @@ import { CreditorModel } from '../../creditor/repository/creditor.model';
 import { EmitterModel } from '../../emitter/repository/emitter.model';
 import { FarmModel } from '../../emitter/repository/farm.model';
 import { FarmEntity } from '../../entities/person/farm.entity';
+import { DeliveryPlaceModel } from '../../delivery-place/repository/delivery-place.model';
 
 @Entity('cpr')
 export class CprModel extends BaseModel {
@@ -37,8 +38,8 @@ export class CprModel extends BaseModel {
   @Column({ name: 'product_development_site_details', type: 'json' })
   productDevelopmentSiteDetails: FarmEntity;
 
-  @Column({ name: 'delivery_place', type: 'json' })
-  deliveryPlace: CompanyEntity;
+  @Column({ name: 'delivery_place_details', type: 'json' })
+  deliveryPlaceDetails: CompanyEntity;
 
   @Column({ name: 'issue_date' })
   issueDate: Date;
@@ -61,4 +62,7 @@ export class CprModel extends BaseModel {
 
   @ManyToOne(() => FarmModel, (farm) => farm.cprs)
   productDevelopmentSite: FarmModel;
+
+  @ManyToOne(() => DeliveryPlaceModel, (deliveryPlace) => deliveryPlace.cprs)
+  deliveryPlace: DeliveryPlaceModel;
 }

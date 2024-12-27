@@ -5,6 +5,10 @@ import { InMemoryRepository } from '../infra/repository/in-memory/in-memory.repo
 import { CompanyEntity } from '../entities/person/company.entity';
 import { AddressEntity } from '../entities/person/address.entity';
 import { StateEnum } from '../infra/entities/state-enum';
+import { DeliveryPlaceRepository } from './repository/delivery-place.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DeliveryPlaceModel } from './repository/delivery-place.model';
+import { AddressModel } from '../infra/repository/typeORM/address.model';
 
 const repo = new InMemoryRepository<CompanyEntity>();
 
@@ -34,12 +38,17 @@ mockDeliveryPlace.id = '0190cc93-e9eb-75ba-87a2-8a0a024540c0';
 repo.insert(mockDeliveryPlace);
 
 @Module({
+  imports: [TypeOrmModule.forFeature([DeliveryPlaceModel, AddressModel])],
   controllers: [DeliveryPlaceController],
   providers: [
     DeliveryPlaceService,
+    // {
+    //   provide: 'KEY_REPOSITORY_DELIVERY_PLACE',
+    //   useValue: repo,
+    // },
     {
       provide: 'KEY_REPOSITORY_DELIVERY_PLACE',
-      useValue: repo,
+      useClass: DeliveryPlaceRepository,
     },
   ],
   exports: [DeliveryPlaceService],

@@ -19,6 +19,7 @@ export class CprRepository extends TypeORMRepository<CprModel> {
       creditorDetails: entity.creditor,
       emitterDetails: entity.emitter,
       productDevelopmentSiteDetails: entity.productDevelopmentSite,
+      deliveryPlaceDetails: entity.deliveryPlace,
     });
   }
 }

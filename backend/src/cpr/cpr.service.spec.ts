@@ -239,8 +239,6 @@ describe('CprService', () => {
         }),
     } as unknown as CprDocumentFactory;
 
-    mockCprDto.value = 10000;
-
     repository['data'] = [];
 
     const module: TestingModule = await Test.createTestingModule({
@@ -675,6 +673,7 @@ describe('CprService', () => {
         '13/07/2024',
       );
     });
+
     it('regitryDate should return undefined', async () => {
       const mockIndividual2 = IndividualEntity.create({
         name: 'Francesco di Vincenzo Bonaulti de Galilei',

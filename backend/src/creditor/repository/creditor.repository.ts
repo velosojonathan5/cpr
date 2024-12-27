@@ -8,7 +8,7 @@ import { LegalRepresentative } from 'src/entities/person/company.entity';
 import { AddressEntity } from 'src/entities/person/address.entity';
 
 @Injectable()
-export class CprRepository extends TypeORMRepository<CreditorEntity> {
+export class CrediorRepository extends TypeORMRepository<CreditorEntity> {
   constructor(
     @InjectRepository(CreditorModel)
     private creditorRepository: Repository<CreditorModel>,

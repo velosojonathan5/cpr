@@ -7,7 +7,7 @@ import { StateEnum } from '../infra/entities/state-enum';
 import { AddressEntity } from '../entities/person/address.entity';
 import { CreditorModel } from './repository/creditor.model';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CprRepository } from './repository/creditor.repository';
+import { CrediorRepository } from './repository/creditor.repository';
 import { AddressModel } from '../infra/repository/typeORM/address.model';
 import { LegalRepresentative } from '../entities/person/company.entity';
 
@@ -49,7 +49,7 @@ repo.insert(mockCreditor);
     CreditorService,
     {
       provide: 'KEY_REPOSITORY_CREDITOR',
-      useClass: CprRepository,
+      useClass: CrediorRepository,
     },
     // {
     //   provide: 'KEY_REPOSITORY_CREDITOR',
