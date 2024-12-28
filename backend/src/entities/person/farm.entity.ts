@@ -69,6 +69,10 @@ export class SiteRegistry {
       typeOfPossessionEnum: obj.typeOfPossessionEnum,
     });
   }
+
+  static restore(obj: unknown): SiteRegistry {
+    return Object.assign(new SiteRegistry(), obj);
+  }
 }
 
 export enum PossessionEnum {
@@ -122,6 +126,10 @@ export class RentRegistry extends SiteRegistry {
           content: this.finalDateFormatted,
         },
       ]);
+  }
+
+  static restore(obj: unknown): RentRegistry {
+    return Object.assign(new RentRegistry(), obj);
   }
 }
 
@@ -243,5 +251,9 @@ export class FarmEntity extends TenantEntity {
     }
 
     return farm;
+  }
+
+  static restore(obj: unknown): FarmEntity {
+    return Object.assign(new FarmEntity(), obj);
   }
 }

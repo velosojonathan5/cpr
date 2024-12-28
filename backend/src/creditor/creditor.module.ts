@@ -5,12 +5,11 @@ import { InMemoryRepository } from '../infra/repository/in-memory/in-memory.repo
 import { CreditorEntity } from '../entities/person/creditor.entity';
 import { StateEnum } from '../infra/entities/state-enum';
 import { AddressEntity } from '../entities/person/address.entity';
-import {
-  GenderEnum,
-  IndividualEntity,
-  MaritalStatusEnum,
-  Rg,
-} from '../entities/person/individual.entity';
+import { CreditorModel } from './repository/creditor.model';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CrediorRepository } from './repository/creditor.repository';
+import { AddressModel } from '../infra/repository/typeORM/address.model';
+import { LegalRepresentative } from '../entities/person/company.entity';
 
 const mockAddress = AddressEntity.create({
   postalCode: '35585000',
@@ -23,16 +22,6 @@ const mockAddress = AddressEntity.create({
   mailbox: '1234',
 });
 
-const mockLegalRepresentative = IndividualEntity.create({
-  cpf: '13527694099',
-  gender: GenderEnum.MALE,
-  name: 'Antônio Alvarenga Silva',
-  phone: '37999332222',
-  email: 'antonio@pmginsumos.com',
-  rg: new Rg('MG111', 'SSP/MG', new Date('2024-07-13T18:49:18.111Z')),
-  maritalStatus: MaritalStatusEnum.SINGLE,
-});
-
 const mockCreditor = CreditorEntity.create({
   name: 'PMG Insumos',
   cnpj: '88457902000100',
@@ -41,7 +30,10 @@ const mockCreditor = CreditorEntity.create({
   phone: '37999334679',
   email: 'adm@pmginsumos.com',
   address: mockAddress,
-  legalRepresentative: mockLegalRepresentative,
+  legalRepresentative: new LegalRepresentative(
+    'Antônio Alvarenga Silva',
+    '13527694099',
+  ),
 });
 
 const repo = new InMemoryRepository<CreditorEntity>();
@@ -51,13 +43,18 @@ mockCreditor.id = '0190a308-15df-725b-a6f3-4c591248221b';
 repo.insert(mockCreditor);
 
 @Module({
+  imports: [TypeOrmModule.forFeature([CreditorModel, AddressModel])],
   controllers: [CreditorController],
   providers: [
     CreditorService,
     {
       provide: 'KEY_REPOSITORY_CREDITOR',
-      useValue: repo,
+      useClass: CrediorRepository,
     },
+    // {
+    //   provide: 'KEY_REPOSITORY_CREDITOR',
+    //   useValue: repo,
+    // },
   ],
   exports: [CreditorService],
 })
