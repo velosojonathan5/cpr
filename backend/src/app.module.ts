@@ -7,9 +7,13 @@ import { EmitterModule } from './emitter/emitter.module';
 import { DeliveryPlaceModule } from './delivery-place/delivery-place.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
+    UserModule,
     CprModule,
     CreditorModule,
     EmitterModule,
